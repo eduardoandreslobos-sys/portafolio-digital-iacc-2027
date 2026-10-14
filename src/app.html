@@ -556,7 +556,7 @@ function memoryDB(persistKey) {
 }
 
 /* ---------- Backend Supabase (versión publicada fuera de claude.ai) ---------- */
-const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
+const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js';
 function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
 function sbErr(e) { return { code: e && (e.code === '42501' || /row-level security|permission/i.test(e.message || '')) ? 'invalid_argument' : 'unavailable', message: e && e.message }; }
 function supabaseDB(sb, uid) {
