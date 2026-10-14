@@ -96,10 +96,21 @@ create policy profiles_update on public.profiles for update to authenticated usi
 drop policy if exists admins_read on public.admins;
 create policy admins_read on public.admins for select to authenticated using (public.is_member());
 
--- 6. Tiempo real
+-- 6. Permisos explícitos para la Data API
+-- Necesarios si el proyecto se creó con "Automatically expose new tables" desactivado (recomendado).
+-- Solo usuarios autenticados; el rol anónimo no recibe acceso a ninguna tabla.
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.docs to authenticated;
+grant select, insert, update on public.profiles to authenticated;
+grant select on public.admins to authenticated;
+revoke all on public.docs, public.profiles, public.admins, public.allowed_domains from anon;
+grant execute on function public.is_member() to authenticated;
+grant execute on function public.is_admin() to authenticated;
+
+-- 7. Tiempo real
 do $$ begin
   alter publication supabase_realtime add table public.docs;
 exception when duplicate_object then null; end $$;
 
--- 7. Para nombrar administradores (después de que esa persona ingrese una vez):
+-- 8. Para nombrar administradores (después de que esa persona ingrese una vez):
 -- insert into public.admins (user_id) select id from auth.users where email = 'pmo@iacc.cl';
