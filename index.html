@@ -616,6 +616,7 @@ function supabaseUser(sb, session, isAdmin) {
   };
 }
 function showLogin(sb, msg) {
+  S.loginShown = true;
   $('#nav').innerHTML = ''; $('#me').innerHTML = '';
   $('#main').innerHTML = `<div class="empty" style="max-width:520px;margin:8vh auto 0;text-align:left;align-items:stretch"><div class="eyebrow">IACC · Vicerrectoría de Ecosistemas Digitales</div><h3 style="font-size:22px">Ingresa al Portafolio Digital 2027</h3><p>Te enviaremos un enlace de acceso a tu correo institucional. No necesitas contraseña.</p>
     <form id="login" class="stack" style="gap:10px"><div class="fld"><label for="l-email">Correo</label><input id="l-email" type="email" class="inp" required autocomplete="email" placeholder="nombre@iacc.cl"></div>
@@ -630,7 +631,8 @@ async function connectSupabase(cfg) {
   await loadScript(SUPABASE_JS);
   const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
   S.sb = sb;
-  sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && !S.uid) location.reload(); });
+  // Solo recarga si la persona estaba en la pantalla de ingreso; al cargar con sesión, SIGNED_IN también se emite y no debe recargar.
+  sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && S.loginShown) { S.loginShown = false; setTimeout(() => location.reload(), 0); } });
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { showLogin(sb); return false; }
   const u = session.user;
