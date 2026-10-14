@@ -10,7 +10,12 @@ Herramienta web para que la Vicerrectoría de Ecosistemas Digitales de IACC prio
 | **Roadmap** | Iniciativas por área sobre el año, con hitos y flechas de dependencia. En rojo, las dependencias con conflicto. |
 | **Tablero** | Kanban de entregables, tareas e hitos. Un ítem puede ser ejecutado por un agente IA (Claude Code, Codex, Copilot), pero siempre tiene una persona responsable. |
 | **Métricas** | Primero los resultados clave (KR), después el flujo: trabajo en curso, bloqueos, ítems terminados y tiempo de ciclo. El uso de agentes IA aparece solo como contexto. |
-| **Comité** | Registro de decisiones por sesión: tipo, fundamento e iniciativas involucradas. Las decisiones no se borran, se revocan con su motivo. Fijar un puntaje acordado deja un registro automático. |
+| **Comité** | Registro de decisiones por sesión: tipo, fundamento e iniciativas involucradas. Las decisiones no se borran, se revocan con su motivo. Fijar un puntaje acordado deja un registro automático. Cada edición o revocación guarda la versión anterior en el historial de la decisión. |
+
+Además:
+- **Qué cambió:** en Métricas y Roadmap hay una franja con los cambios de los últimos 7, 14 o 30 días: ítems terminados o bloqueados, updates, decisiones e iniciativas nuevas. Cada hecho enlaza a su origen y cada persona puede descartarlo de su vista. En claude.ai, Claude puede resumirla en un borrador que cita cada afirmación.
+- **Vistas por rol:** PO, PM y PMO ven sus pendientes priorizados y pueden filtrar las iniciativas donde tienen ese rol.
+- **Todo cambio rápido o de IA es reversible:** la edición directa en la tabla y la descomposición propuesta por IA ofrecen "Deshacer". Los ítems creados por IA quedan marcados como "Borrador IA" hasta que alguien los revisa y guarda.
 
 Cada iniciativa tiene ficha con roles (PO, PM, PMO y responsable único), una matriz de responsabilidades según el método, descomposición en épicas o fases, dependencias ("depende de" y "bloquea a"), resultados clave, updates de estado, decisiones y evaluación.
 

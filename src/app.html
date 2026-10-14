@@ -1,7 +1,7 @@
 <title>Portafolio Digital 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
 <style>
 /* Layout: rail de navegación tenue + lienzo operativo denso (ranking, roadmap, tablero, métricas, comité); detalle en panel lateral.
    Tema generado desde 3 entradas (como Linear 2026): --base-hue (neutros cálidos), --accent-hue y --contrast (0 a 1). Todo en OKLCH. */
@@ -23,8 +23,8 @@
   --agent:oklch(48% .17 305); --agent-soft:oklch(94.5% .04 305);
   --scrim:oklch(20% .01 var(--base-hue) / .4); --shadow:0 12px 40px oklch(20% .02 var(--base-hue) / .14);
   --f-display:'Bricolage Grotesque','Avenir Next','Segoe UI',sans-serif;
-  --f-body:'Instrument Sans','Helvetica Neue','Segoe UI',system-ui,sans-serif;
-  --f-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --f-body:'Geist','Inter','Helvetica Neue','Segoe UI',system-ui,sans-serif;
+  --f-mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:oklch(20.5% var(--nc) var(--base-hue)); --rail:oklch(18% var(--nc) var(--base-hue)); --surface:oklch(23.5% var(--nc) var(--base-hue)); --surface-2:oklch(27% var(--nc) var(--base-hue));
@@ -47,7 +47,29 @@
 [hidden]{display:none!important}
 html,body{height:100%}
 body{margin:0}
-.no-ai .btn.ai,.no-ai .ai-box{display:none!important}
+.no-ai .btn.ai,.no-ai .ai-box,.no-ai .ai-sum{display:none!important}
+/* P3: qué cambió, historial de decisiones, deshacer */
+.changes{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;margin:0 0 18px}
+.changes-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.changes-head h2{font-size:15px}
+.feed{list-style:none;margin:8px 0 4px;padding:0;display:flex;flex-direction:column}
+.feed li{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line-soft);padding:2px 0}
+.feed li:first-child{border-top:0}
+.feed-item{all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;gap:4px;align-items:baseline;padding:6px 6px;border-radius:6px;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.feed-item:hover{background:var(--surface-2)}
+.feed-item:focus-visible,.feed-x:focus-visible,.cite:focus-visible{outline:2px solid var(--accent)}
+.feed-x{all:unset;cursor:pointer;width:24px;height:24px;display:grid;place-items:center;border-radius:6px;color:var(--muted);font-size:16px;flex:none}
+.feed-x:hover{background:var(--surface-2);color:var(--fg)}
+.ai-sum{margin-top:10px;border:1px dashed var(--agent);border-radius:8px;padding:10px 12px;background:var(--agent-soft)}
+.ai-sum p{margin:6px 0 0;max-width:80ch;line-height:1.55}
+.cite{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 3px;margin:0 1px;border-radius:4px;font:600 10.5px var(--f-mono);background:var(--surface);color:var(--agent);border:1px solid var(--agent);vertical-align:2px}
+.hist{font-size:12.5px}
+.hist summary{cursor:pointer;color:var(--muted);font-weight:500}
+.hist ol{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.toast{display:flex;align-items:center;gap:14px}
+.toast[hidden]{display:none!important}
+.toast-undo{all:unset;cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.toast-undo:focus-visible{outline:2px solid currentColor;outline-offset:2px}
 /* P2: edición directa, foco por rol, tooltips, transición */
 .cellsel{font:inherit;font-size:12.5px;color:var(--fg);background:transparent;border:1px solid transparent;border-radius:6px;padding:3px 4px;cursor:pointer;max-width:130px}
 .cellsel:hover{border-color:var(--line);background:var(--surface)}
@@ -74,7 +96,9 @@ body{margin:0}
 ::view-transition-group(peek){animation-duration:.24s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}
 ::view-transition-old(peek),::view-transition-new(peek){height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
-body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 var(--f-body);-webkit-font-smoothing:antialiased;font-feature-settings:'tnum' 1;font-variant-numeric:tabular-nums}
+/* Tipografía: sans neutra para lectura, mono solo para códigos, fechas y cifras alineadas */
+td.small.num,.due,.code,.kr-nums,.tip-g b.num{font-family:var(--f-mono);letter-spacing:-.01em}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
@@ -489,7 +513,11 @@ function refVal(ref) { return (ref || '').split(':').slice(1).join(':'); }
 function isMine(ref) { return S.uid && ref === 'u:' + S.uid; }
 
 let toastT;
-function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3800); }
+function toast(msg, undo) {
+  const t = $('#toast'); t.innerHTML = ''; const sp = document.createElement('span'); sp.textContent = msg; t.append(sp);
+  if (undo) { const b = document.createElement('button'); b.type = 'button'; b.className = 'toast-undo'; b.textContent = 'Deshacer'; b.onclick = async () => { t.hidden = true; clearTimeout(toastT); await undo(); }; t.append(b); }
+  t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, undo ? 8000 : 3800);
+}
 
 async function write(p, okMsg) {
   try { await p; if (okMsg) toast(okMsg); return true; }
@@ -669,8 +697,9 @@ function decisionCard(d, { showInits = true } = {}) {
     <h3 class="dec-t">${esc(d.title)}</h3>
     ${d.rationale ? `<p class="dec-r">${esc(d.rationale)}</p>` : ''}
     ${rev && d.revokeReason ? `<p class="small" style="margin:0;color:var(--bad)">Motivo de revocación: ${esc(d.revokeReason)}</p>` : ''}
+    ${(d.history || []).length ? `<details class="hist"><summary>Historial · ${d.history.length} cambio${d.history.length === 1 ? '' : 's'}</summary><ol>${d.history.slice().reverse().map(h => `<li><div class="small"><b>${esc(h.event === 'revocación' ? 'Revocada' : 'Editada')}</b> · ${new Date(h.at).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' })}${h.by ? ' · ' + person(h.by) : ''}${h.why ? ` · ${esc(h.why)}` : ''}</div><div class="small muted">Versión anterior: [${esc(h.type || '')}] ${esc(h.title || '')}${h.date ? ` · sesión ${esc(fmtLong(h.date))}` : ''}</div>${h.rationale ? `<div class="small muted" style="white-space:pre-wrap">${esc(h.rationale)}</div>` : ''}</li>`).join('')}</ol></details>` : ''}
     <div class="row">${showInits ? ins.map(x => `<button type="button" class="chip outline" style="cursor:pointer" data-action="open-init" data-id="${esc(x.id)}" data-tab="decisiones">${esc(x.code)} · ${esc(x.name.length > 34 ? x.name.slice(0, 33) + '…' : x.name)}</button>`).join('') : ''}<span class="spacer"></span>${d.author ? person(d.author) : ''}
-      ${!rev && S.canWrite ? `<button class="btn sm ghost" type="button" data-action="revoke-dec" data-id="${esc(d.id)}">Revocar</button>` : ''}${S.canAdmin && S.canWrite ? `<button class="btn sm ghost danger ${S.confirmDel === 'dec:' + d.id ? 'armed' : ''}" type="button" data-action="delete-dec" data-id="${esc(d.id)}">${S.confirmDel === 'dec:' + d.id ? 'Confirmar' : 'Eliminar'}</button>` : ''}</div>
+      ${!rev && S.canWrite ? `<button class="btn sm ghost" type="button" data-action="edit-dec" data-id="${esc(d.id)}">Editar</button><button class="btn sm ghost" type="button" data-action="revoke-dec" data-id="${esc(d.id)}">Revocar</button>` : ''}${S.canAdmin && S.canWrite ? `<button class="btn sm ghost danger ${S.confirmDel === 'dec:' + d.id ? 'armed' : ''}" type="button" data-action="delete-dec" data-id="${esc(d.id)}">${S.confirmDel === 'dec:' + d.id ? 'Confirmar' : 'Eliminar'}</button>` : ''}</div>
   </article>`;
 }
 function fmtLong(s) { const t = parseD(s); if (t == null) return ''; return new Date(t).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }); }
@@ -717,7 +746,7 @@ async function openPick(pk, q) {
 
 /* ---------- Render principal ---------- */
 let rq = false;
-function scheduleRender() { if (rq) return; rq = true; requestAnimationFrame(() => { rq = false; render(); }); }
+function scheduleRender() { if (rq) return; rq = true; const go = () => { if (!rq) return; rq = false; render(); }; requestAnimationFrame(go); setTimeout(go, 120); }
 
 function renderNav() {
   $('#nav').innerHTML = VIEWS.map(v => `<button type="button" data-action="go" data-view="${v.k}" aria-current="${S.view === v.k ? 'page' : 'false'}">${ICON[v.k]}<span>${v.label}</span><kbd>${v.key}</kbd></button>`).join('');
@@ -766,6 +795,52 @@ function filtersBar(extra = '') {
 function healthChip(h) { return `<span class="chip h-${esc(h || 'en_curso')}"><span class="dot"></span>${HEALTH[h] || HEALTH.en_curso}</span>`; }
 function methodChip(m) { return `<span class="chip outline">${METHODS[m] || '—'}</span>`; }
 function exampleChip(i) { return i.ejemplo ? '<span class="chip example" title="Registro de ejemplo; puedes quitarlo">Ejemplo</span>' : ''; }
+
+/* ---------- Qué cambió (hechos con fuente, descartables por persona) ---------- */
+S.feedDays = 14; S.feedAll = false; S.dismissed = new Set();
+try { S.dismissed = new Set(JSON.parse(localStorage.getItem('pd27.dismissed') || '[]')); } catch (e) {}
+function saveDismissed() { try { localStorage.setItem('pd27.dismissed', JSON.stringify([...S.dismissed].slice(-500))); } catch (e) {} }
+function dismissFact(id) { S.dismissed.add(id); saveDismissed(); render(); toast('Descartado de tu vista', () => { S.dismissed.delete(id); saveDismissed(); render(); }); }
+function changeFeed() {
+  const since = Date.now() - S.feedDays * 86400000; const ids = new Set(filteredInits().map(i => i.id)); const f = [];
+  const code = id => (initById(id) || {}).code || '¿?';
+  S.inits.forEach(i => { if (ids.has(i.id) && i.createdAt >= since && !i.ejemplo) f.push({ id: 'new:' + i.id, at: i.createdAt, sev: 1, t: `${i.code}: nueva iniciativa «${i.name}»`, a: `data-action="open-init" data-id="${esc(i.id)}"` }); });
+  S.items.forEach(t => {
+    if (!ids.has(t.initiativeId) || t.type === 'epica') return;
+    if (t.status === 'done' && t.doneAt >= since) f.push({ id: 'done:' + t.id + ':' + t.doneAt, at: t.doneAt, sev: 0, t: `${code(t.initiativeId)}: «${t.title}» terminado${refKind(t.assignee) === 'a' ? ` por ${refVal(t.assignee)}` : ''}`, a: `data-action="open-item" data-id="${esc(t.id)}"` });
+    if (t.blocked && t.status !== 'done' && (t.updatedAt || t.createdAt || 0) >= since) f.push({ id: 'blk:' + t.id + ':' + (t.updatedAt || t.createdAt), at: t.updatedAt || t.createdAt, sev: 3, t: `${code(t.initiativeId)}: «${t.title}» está bloqueado`, a: `data-action="open-item" data-id="${esc(t.id)}"` });
+  });
+  S.updates.forEach(u => { if (ids.has(u.initiativeId) && u.at >= since) f.push({ id: 'upd:' + u.id, at: u.at, sev: u.health === 'fuera' ? 3 : u.health === 'en_riesgo' ? 2 : 1, t: `${code(u.initiativeId)}: update «${HEALTH[u.health] || ''}» — ${u.text.split('\n')[0].slice(0, 90)}${u.text.length > 90 ? '…' : ''}`, a: `data-action="open-init" data-id="${esc(u.initiativeId)}" data-tab="updates"` }); });
+  S.decisions.forEach(d => {
+    const on = (d.initiativeIds || []).filter(x => ids.has(x)); if (!on.length) return;
+    if (d.at >= since) f.push({ id: 'dec:' + d.id, at: d.at, sev: 1, t: `Comité (${d.type}): ${d.title}`, a: `data-action="open-init" data-id="${esc(on[0])}" data-tab="decisiones"` });
+    if (d.status === 'revocada' && d.revokedAt >= since) f.push({ id: 'rev:' + d.id, at: d.revokedAt, sev: 2, t: `Comité revocó: ${d.title}`, a: `data-action="open-init" data-id="${esc(on[0])}" data-tab="decisiones"` });
+  });
+  return f.sort((a, b) => b.at - a.at);
+}
+function changeStrip() {
+  const all = changeFeed(); const vis = all.filter(x => !S.dismissed.has(x.id)); const hid = all.length - vis.length;
+  const shown = S.feedAll ? vis : vis.slice(0, 5); S.feedShown = vis;
+  const sh = sev => sev === 3 ? '<span class="sh sq" style="color:var(--bad)"></span>' : sev === 2 ? '<span class="sh tri" style="color:var(--warn)"></span>' : sev === 0 ? '<span class="sh" style="color:var(--ok);border-radius:50%;width:7px"></span>' : '<span class="sh" style="color:var(--muted);border-radius:50%;width:7px"></span>';
+  const sum = S.ai.feedSum;
+  return `<section class="changes" aria-label="Qué cambió"><div class="changes-head"><h2>Qué cambió</h2><div class="seg-filter" role="group" aria-label="Período">${[7, 14, 30].map(d => `<button type="button" data-action="feed-days" data-d="${d}" aria-pressed="${S.feedDays === d}">${d} días</button>`).join('')}</div><span class="spacer"></span>
+      ${vis.length ? `<button class="btn ai sm" type="button" data-action="feed-ai" ${S.ai.feedBusy ? 'disabled' : ''}>${S.ai.feedBusy ? 'Resumiendo…' : 'Resumir con IA'}</button>` : ''}${hid ? `<button class="btn ghost sm" type="button" data-action="feed-restore">Mostrar ${hid} descartado${hid === 1 ? '' : 's'}</button>` : ''}</div>
+    ${sum ? `<div class="ai-sum"><div class="row"><span class="chip agent">Borrador IA</span><span class="small muted">Cada afirmación enlaza a su fuente. Verifícalas antes de compartir.</span><span class="spacer"></span><button class="btn ghost sm" type="button" data-action="feed-ai-discard">Descartar</button></div><p>${sum}</p></div>` : ''}
+    ${vis.length ? `<ol class="feed">${shown.map(x => `<li><button type="button" class="feed-item" ${x.a}>${sh(x.sev)}<span>${esc(x.t)}</span></button><span class="small muted num">${ago(x.at)}</span><button type="button" class="feed-x" data-action="feed-dismiss" data-f="${esc(x.id)}" aria-label="Descartar">×</button></li>`).join('')}</ol>${vis.length > 5 ? `<button class="btn ghost sm" type="button" data-action="feed-more">${S.feedAll ? 'Ver menos' : `Ver ${vis.length - 5} más`}</button>` : ''}` : `<p class="small muted" style="margin:6px 0 0">Sin cambios en los últimos ${S.feedDays} días${hid ? ' (los que descartaste están ocultos)' : ''}.</p>`}</section>`;
+}
+async function aiFeed() {
+  if (!sample) { toast('La asistencia de Claude no está disponible en esta vista.'); return; }
+  const facts = (S.feedShown || []).slice(0, 25); if (!facts.length) return;
+  S.ai.feedBusy = true; render();
+  try {
+    const { text } = await sample(`Resume para el comité de portafolio digital de IACC (Chile) qué cambió en los últimos ${S.feedDays} días. Usa solo estos hechos numerados; no inventes nada. Español de Chile, máximo 3 oraciones y 70 palabras. Después de cada afirmación cita entre corchetes el número del hecho que la respalda, por ejemplo [2] o [1][4]. Destaca primero lo que requiere atención (bloqueos, riesgos, revocaciones). Sin Markdown.
+
+Hechos:
+${facts.map((x, n) => `[${n + 1}] ${x.t} (${ago(x.at)})`).join('\n')}`, { modelTier: 'quick' });
+    S.ai.feedSum = esc(text.trim()).replace(/\[(\d+)\]/g, (m, n) => { const x = facts[+n - 1]; return x ? `<button type="button" class="cite" ${x.a} title="${esc(x.t)}">${n}</button>` : ''; });
+  } catch (e) { toast(aiErr(e)); }
+  finally { S.ai.feedBusy = false; render(); }
+}
 
 /* ---------- Vistas por rol ---------- */
 const ROLE_LABEL = { po: 'PO', pm: 'PM', pmo: 'PMO' };
@@ -884,7 +959,7 @@ function viewRoadmap() {
   depRows.sort((a, b) => b.iss.length - a.iss.length);
   const depPanel = `<div class="sec"><h2>Dependencias</h2><p>Las flechas del roadmap van de la iniciativa que habilita a la que depende de ella. En rojo, las que tienen conflicto de fechas, capacidad o estado.</p>
     ${depRows.length ? `<div class="tbl-wrap"><table class="area-t"><thead><tr><th>Iniciativa</th><th>Depende de</th><th>Tipo</th><th>Estado</th></tr></thead><tbody>${depRows.map(x => `<tr class="clickable" data-action="open-init" data-id="${esc(x.i.id)}" data-tab="dependencias"><td><span class="code">${esc(x.i.code)}</span> ${esc(x.i.name)}</td><td><span class="code">${esc(x.p.code)}</span> ${esc(x.p.name)}</td><td class="small">${DEP_KINDS[x.d.kind] || DEP_KINDS['fin-inicio']}</td><td>${x.iss.length ? x.iss.map(t => `<span class="chip h-fuera" style="margin:2px 4px 2px 0">${esc(t.t)}</span>`).join('') : '<span class="chip h-en_curso"><span class="dot"></span>Sin conflicto</span>'}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted small">Ninguna iniciativa tiene dependencias registradas. Agrégalas en la pestaña Dependencias de cada iniciativa.</p>'}</div>`;
-  return `${filtersBar()}<div class="rm-wrap"><div class="rm" id="rm"><div class="rm-head"><div class="rm-group" style="border:0;background:none">Iniciativa</div><div class="rm-months">${months}</div></div>${body}<svg class="rm-links" id="rm-links" aria-hidden="true"></svg></div></div>
+  return `${filtersBar()}${changeStrip()}<div class="rm-wrap"><div class="rm" id="rm"><div class="rm-head"><div class="rm-group" style="border:0;background:none">Iniciativa</div><div class="rm-months">${months}</div></div>${body}<svg class="rm-links" id="rm-links" aria-hidden="true"></svg></div></div>
   <div class="legend"><span><span class="sw"></span>Ágil o híbrido</span><span><span class="sw dash"></span>Cascada</span><span><span class="msw"></span>Hito</span><span>Relleno = % de ítems hechos</span><span>Borde = salud del último update</span><span>Flecha gris = dependencia · roja discontinua = con conflicto</span></div>${depPanel}`;
 }
 function drawDepLinks() {
@@ -932,7 +1007,7 @@ function card(t, today) {
   const i = initById(t.initiativeId); const late = t.due && t.status !== 'done' && t.due < today;
   const parent = t.parentId ? S.items.find(x => x.id === t.parentId) : null;
   return `<button class="card ${t.blocked ? 'blocked' : ''}" type="button" draggable="true" data-drag="${esc(t.id)}" data-action="open-item" data-id="${esc(t.id)}">
-    <div class="card-meta">${S.boardInit === 'all' && i ? `<span class="code">${esc(i.code)}</span>` : ''}<span class="chip outline">${typeLabel(t.type, i && i.method)}</span>${t.blocked ? '<span class="chip h-fuera">Bloqueado</span>' : ''}${t.agentOk && refKind(t.assignee) !== 'a' ? '<span class="chip agent">Apto agente</span>' : ''}</div>
+    <div class="card-meta">${S.boardInit === 'all' && i ? `<span class="code">${esc(i.code)}</span>` : ''}<span class="chip outline">${typeLabel(t.type, i && i.method)}</span>${t.blocked ? '<span class="chip h-fuera">Bloqueado</span>' : ''}${t.agentOk && refKind(t.assignee) !== 'a' ? '<span class="chip agent">Apto agente</span>' : ''}${t.aiDraft ? '<span class="chip example" title="Propuesto por IA; se confirma al editarlo y guardarlo">Borrador IA</span>' : ''}</div>
     <div class="card-title">${esc(t.title)}</div>
     ${parent ? `<div class="small muted" style="overflow-wrap:anywhere">↳ ${esc(parent.title)}</div>` : ''}
     <div class="card-foot">${person(t.assignee)}${t.due ? `<span class="due ${late ? 'late' : ''}">${fmtD(t.due)}</span>` : ''}</div>
@@ -991,7 +1066,7 @@ function viewMetrics() {
   // Areas
   const areas = [...new Set(inits.map(i => i.area))];
   const areaRows = areas.map(a => { const ai = inits.filter(i => i.area === a); const aits = its.filter(t => ai.some(i => i.id === t.initiativeId)); return `<tr><td>${esc(a)}</td><td class="n">${ai.length}</td><td class="n">${ai.filter(i => i.health === 'en_curso').length}</td><td class="n">${ai.filter(i => i.health === 'en_riesgo').length}</td><td class="n">${ai.filter(i => i.health === 'fuera').length}</td><td class="n">${aits.filter(t => t.status !== 'done').length}</td><td class="n">${aits.filter(t => t.blocked && t.status !== 'done').length}</td></tr>`; }).join('');
-  return `${filtersBar()}${tiles}
+  return `${filtersBar()}${tiles}${changeStrip()}
   <div class="sec"><h2>Resultados clave</h2><p>Avance desde la línea base hacia la meta de cada iniciativa. Es lo que el comité debería revisar primero: entregar más ítems no sirve si estos números no se mueven.</p><div class="panel">${krHtml}</div></div>
   <div class="panels sec"><div class="panel"><h2 style="font-size:16px;margin-bottom:12px">Carga por trimestre ${Y}</h2>${qchart}</div>
   <div class="panel"><h2 style="font-size:16px;margin-bottom:12px">Salud por área</h2><div style="overflow-x:auto"><table class="area-t"><thead><tr><th>Área</th><th class="n">Inic.</th><th class="n">En curso</th><th class="n">Riesgo</th><th class="n">Fuera</th><th class="n">Ítems abiertos</th><th class="n">Bloq.</th></tr></thead><tbody>${areaRows}</tbody></table></div></div></div>`;
@@ -1077,7 +1152,7 @@ function tabDecomp(i) {
   const epics = its.filter(t => t.type === 'epica').sort((a, b) => (a.order || 0) - (b.order || 0));
   const kids = p => its.filter(t => t.parentId === p && t.type !== 'epica').sort((a, b) => (a.order || 0) - (b.order || 0));
   const orphans = its.filter(t => t.type !== 'epica' && (!t.parentId || !epics.some(e => e.id === t.parentId)));
-  const line = t => `<div class="titem" data-action="open-item" data-id="${esc(t.id)}" tabindex="0"><span class="st ${t.status}">${STATUS_LABEL[t.status] || 'Backlog'}</span><span class="chip outline">${typeLabel(t.type, i.method)}</span><span class="t">${esc(t.title)}</span>${t.blocked ? '<span class="chip h-fuera">Bloqueado</span>' : ''}${person(t.assignee)}${t.due ? `<span class="due">${fmtD(t.due)}</span>` : ''}</div>`;
+  const line = t => `<div class="titem" data-action="open-item" data-id="${esc(t.id)}" tabindex="0"><span class="st ${t.status}">${STATUS_LABEL[t.status] || 'Backlog'}</span><span class="chip outline">${typeLabel(t.type, i.method)}</span><span class="t">${esc(t.title)}</span>${t.aiDraft ? '<span class="chip example">Borrador IA</span>' : ''}${t.blocked ? '<span class="chip h-fuera">Bloqueado</span>' : ''}${person(t.assignee)}${t.due ? `<span class="due">${fmtD(t.due)}</span>` : ''}</div>`;
   let tree = epics.map(e => { const ks = kids(e.id); const p = ks.length ? ks.filter(k => k.status === 'done').length / ks.length : 0; return `<div class="epic"><div class="epic-head" data-action="open-item" data-id="${esc(e.id)}" tabindex="0"><span class="chip accent">${typeLabel('epica', i.method)}</span><span class="t">${esc(e.title)}</span><span class="small muted num">${ks.filter(k => k.status === 'done').length}/${ks.length}</span><span class="mini-prog"><i style="width:${p * 100}%"></i></span><button class="btn sm ghost" type="button" data-action="new-item" data-init="${esc(i.id)}" data-parent="${esc(e.id)}">+ Ítem</button></div>${ks.map(line).join('')}</div>`; }).join('');
   if (orphans.length) tree += `<div class="epic"><div class="epic-head" style="cursor:default"><span class="t muted">Sin ${typeLabel('epica', i.method).toLowerCase()}</span></div>${orphans.map(line).join('')}</div>`;
   const d = S.ai.decomp && S.ai.decomp.initId === i.id ? S.ai.decomp : null;
@@ -1202,20 +1277,22 @@ function openMethod() {
     <p class="err" id="mc-err" hidden></p>
     <div class="row">${ro ? '' : '<button class="btn pri" type="button" data-action="save-method">Guardar método</button>'}<button class="btn ghost" type="button" data-action="modal-close">${ro ? 'Cerrar' : 'Cancelar'}</button></div>`);
 }
-function openDecision(initId) {
+function openDecision(initId, editId) {
   if (!guardWrite()) return;
-  S.modal = { kind: 'dec' };
+  const ed = editId ? S.decisions.find(x => x.id === editId) : null;
+  S.modal = { kind: 'dec', editId: ed ? ed.id : null }; const sel = new Set(ed ? ed.initiativeIds || [] : [initId]);
   const inits = S.inits.slice().sort((a, b) => a.code.localeCompare(b.code));
-  openModal(`<h2>Registrar decisión del comité</h2>
-    <div class="grid2"><div class="fld"><label for="x-date">Fecha de la sesión</label><input id="x-date" type="date" class="inp" value="${todayISO()}"></div>
-    <div class="fld"><label for="x-type">Tipo de decisión</label><select id="x-type" class="inp">${opt(DEC_TYPES.map(t => [t, t]), 'Aprobación')}</select></div></div>
-    <div class="fld"><label for="x-title">Decisión</label><input id="x-title" class="inp" placeholder="Ej. Se aprueba VED-01 para iniciar en enero con 2 equipos"></div>
-    <div class="fld"><label for="x-rat">Fundamento</label><textarea id="x-rat" class="inp" rows="4" placeholder="Por qué se decidió así, alternativas descartadas y condiciones."></textarea></div>
-    <div class="fld"><span class="lbl">Iniciativas involucradas</span><div class="multi" id="x-inits">${inits.map(i => `<label class="check"><input type="checkbox" value="${esc(i.id)}" ${i.id === initId ? 'checked' : ''}> <span class="code">${esc(i.code)}</span> ${esc(i.name)} <span class="small muted">· ${esc(i.stage)}</span></label>`).join('') || '<span class="small muted">No hay iniciativas.</span>'}</div></div>
+  openModal(`<h2>${ed ? 'Editar decisión' : 'Registrar decisión del comité'}</h2>${ed ? '<p class="small muted" style="margin:0">La versión anterior queda guardada en el historial de la decisión.</p>' : ''}
+    <div class="grid2"><div class="fld"><label for="x-date">Fecha de la sesión</label><input id="x-date" type="date" class="inp" value="${esc(ed ? ed.date : todayISO())}"></div>
+    <div class="fld"><label for="x-type">Tipo de decisión</label><select id="x-type" class="inp">${opt(DEC_TYPES.map(t => [t, t]), ed ? ed.type : 'Aprobación')}</select></div></div>
+    <div class="fld"><label for="x-title">Decisión</label><input id="x-title" class="inp" value="${esc(ed ? ed.title : '')}" placeholder="Ej. Se aprueba VED-01 para iniciar en enero con 2 equipos"></div>
+    <div class="fld"><label for="x-rat">Fundamento</label><textarea id="x-rat" class="inp" rows="4" placeholder="Por qué se decidió así, alternativas descartadas y condiciones.">${esc(ed ? ed.rationale || '' : '')}</textarea></div>
+    ${ed ? '<div class="fld"><label for="x-why">Motivo del cambio</label><input id="x-why" class="inp" placeholder="Ej. Corrección de la fecha de inicio acordada"></div>' : ''}
+    <div class="fld"><span class="lbl">Iniciativas involucradas</span><div class="multi" id="x-inits">${inits.map(i => `<label class="check"><input type="checkbox" value="${esc(i.id)}" ${sel.has(i.id) ? 'checked' : ''}> <span class="code">${esc(i.code)}</span> ${esc(i.name)} <span class="small muted">· ${esc(i.stage)}</span></label>`).join('') || '<span class="small muted">No hay iniciativas.</span>'}</div></div>
     <label class="check" id="x-apply-wrap"><input type="checkbox" id="x-apply" checked> <span id="x-apply-l">Cambiar la etapa de las iniciativas a «Priorizada»</span></label>
     <p class="err" id="x-err" hidden></p>
-    <div class="row"><button class="btn pri" type="button" data-action="save-dec">Registrar decisión</button><button class="btn ghost" type="button" data-action="modal-close">Cancelar</button></div>`);
-  syncApply();
+    <div class="row"><button class="btn pri" type="button" data-action="save-dec">${ed ? 'Guardar nueva versión' : 'Registrar decisión'}</button><button class="btn ghost" type="button" data-action="modal-close">Cancelar</button></div>`);
+  syncApply(); if (ed) $('#x-apply-wrap').hidden = true;
 }
 function syncApply() { const t = $('#x-type'); if (!t) return; const st = DEC_STAGE[t.value]; $('#x-apply-wrap').hidden = !st; if (st) $('#x-apply-l').textContent = `Cambiar la etapa de las iniciativas a «${st}»`; }
 function openRevoke(id) {
@@ -1289,7 +1366,7 @@ async function saveItem() {
   if (refKind(assignee) === 'a' && !dri) { err.textContent = 'Un ítem ejecutado por un agente IA necesita una persona responsable que revise su trabajo.'; err.hidden = false; return; }
   const id = S.modal.id; const prev = id ? S.items.find(x => x.id === id) : null;
   const status = $('#m-status').value;
-  const data = { title, initiativeId: $('#m-init').value, type: $('#m-type').value, parentId: $('#m-type').value === 'epica' ? '' : $('#m-parent').value, status, due: $('#m-due').value, assignee, dri, desc: $('#m-desc').value.trim(), blocked: $('#m-blocked').checked, agentOk: $('#m-agentok').checked, updatedAt: Date.now() };
+  const data = { title, initiativeId: $('#m-init').value, type: $('#m-type').value, parentId: $('#m-type').value === 'epica' ? '' : $('#m-parent').value, status, due: $('#m-due').value, assignee, dri, desc: $('#m-desc').value.trim(), blocked: $('#m-blocked').checked, agentOk: $('#m-agentok').checked, aiDraft: false, updatedAt: Date.now() };
   stamp(data, prev, status);
   if (prev) { if (await write(db.doc('items/' + id).update(data), 'Ítem guardado')) closeModal(); }
   else { data.order = Date.now(); data.createdAt = Date.now(); if (await write(db.collection('items').doc().set(data), 'Ítem creado')) closeModal(); }
@@ -1351,6 +1428,13 @@ async function saveDec() {
   if (!date) return fail('Indica la fecha de la sesión.');
   if (!title) return fail('Escribe la decisión en una frase.');
   if (!ids.length) return fail('Selecciona al menos una iniciativa.');
+  const editId = S.modal && S.modal.editId;
+  if (editId) {
+    const prev = S.decisions.find(x => x.id === editId); if (!prev) return fail('La decisión ya no existe.');
+    const snap = { at: Date.now(), by: S.uid ? 'u:' + S.uid : '', event: 'edición', why: ($('#x-why').value || '').trim(), date: prev.date, type: prev.type, title: prev.title, rationale: prev.rationale || '', initiativeIds: prev.initiativeIds || [] };
+    if (await write(db.doc('decisions/' + editId).update({ date, type, title, rationale: $('#x-rat').value.trim(), initiativeIds: ids, history: [...(prev.history || []), snap], editedAt: Date.now() }), 'Nueva versión guardada; la anterior queda en el historial')) closeModal();
+    return;
+  }
   const ok = await write(db.collection('decisions').doc().set({ date, type, title, rationale: $('#x-rat').value.trim(), initiativeIds: ids, status: 'vigente', revokeReason: '', author: S.uid ? 'u:' + S.uid : '', auto: false, ejemplo: false, at: Date.now() }), 'Decisión registrada');
   if (!ok) return;
   const st = DEC_STAGE[type];
@@ -1360,7 +1444,8 @@ async function saveDec() {
 async function confirmRevoke() {
   const reason = $('#r-reason').value.trim(); if (!reason) { const e = $('#r-err'); e.textContent = 'Indica el motivo de la revocación.'; e.hidden = false; return; }
   const id = S.modal.id;
-  if (await write(db.doc('decisions/' + id).update({ status: 'revocada', revokeReason: reason, revokedBy: S.uid ? 'u:' + S.uid : '', revokedAt: Date.now() }), 'Decisión revocada')) closeModal();
+  const prev = S.decisions.find(x => x.id === id); const hist = [...((prev && prev.history) || []), { at: Date.now(), by: S.uid ? 'u:' + S.uid : '', event: 'revocación', why: reason, date: prev && prev.date, type: prev && prev.type, title: prev && prev.title, rationale: (prev && prev.rationale) || '', initiativeIds: (prev && prev.initiativeIds) || [] }];
+  if (await write(db.doc('decisions/' + id).update({ status: 'revocada', revokeReason: reason, revokedBy: S.uid ? 'u:' + S.uid : '', revokedAt: Date.now(), history: hist }), 'Decisión revocada')) closeModal();
 }
 async function deleteDec(id) {
   if (!guardWrite()) return;
@@ -1444,14 +1529,15 @@ Responde solo con un arreglo JSON, sin texto adicional, con esta forma:
 async function aiAccept() {
   const d = S.ai.decomp; if (!d || !guardWrite()) return;
   const i = initById(d.initId); S.ai.decomp = null; renderDrawer();
-  let n = 0, base = Date.now();
+  let n = 0; const base = Date.now(); const created = [];
+  const add = async data => { const ref = db.collection('items').doc(); const ok = await write(ref.set({ ...data, initiativeId: d.initId, order: base + n++, createdAt: Date.now(), startedAt: null, doneAt: null, aiDraft: true })); if (ok) created.push(ref.id); return ok ? ref.id : null; };
   for (const e of d.epics) {
     const kids = e.children.filter(c => c.on); if (!e.on && !kids.length) continue;
     let pid = '';
-    if (e.on) { const ref = db.collection('items').doc(); pid = ref.id; if (!(await write(ref.set({ title: e.title, initiativeId: d.initId, type: 'epica', parentId: '', status: 'todo', due: '', assignee: '', dri: i && i.po || '', desc: '', blocked: false, agentOk: false, order: base + n++, createdAt: Date.now(), startedAt: null, doneAt: null })))) return; }
-    for (const c of kids) { if (!(await write(db.collection('items').doc().set({ title: c.title, initiativeId: d.initId, type: c.type, parentId: pid, status: 'backlog', due: c.due, assignee: '', dri: '', desc: '', blocked: false, agentOk: c.agent, order: base + n++, createdAt: Date.now(), startedAt: null, doneAt: null })))) return; }
+    if (e.on) { pid = await add({ title: e.title, type: 'epica', parentId: '', status: 'todo', due: '', assignee: '', dri: i && i.po || '', desc: '', blocked: false, agentOk: false }); if (pid == null) break; }
+    for (const c of kids) if ((await add({ title: c.title, type: c.type, parentId: pid || '', status: 'backlog', due: c.due, assignee: '', dri: '', desc: '', blocked: false, agentOk: c.agent })) == null) break;
   }
-  toast(n + ' ítems agregados a la descomposición');
+  toast(created.length + ' ítems propuestos por IA agregados', async () => { for (const id of created) await write(db.doc('items/' + id).delete()); toast('Descomposición deshecha'); });
 }
 async function aiUpdate() {
   const i = initById(S.drawer.id); if (!i) return;
@@ -1580,6 +1666,13 @@ document.addEventListener('click', e => {
     case 'new-dec': openDecision(a.dataset.init); break;
     case 'save-dec': saveDec(); break;
     case 'revoke-dec': openRevoke(id); break;
+    case 'edit-dec': openDecision(null, id); break;
+    case 'feed-dismiss': dismissFact(a.dataset.f); break;
+    case 'feed-restore': S.dismissed = new Set(); saveDismissed(); render(); break;
+    case 'feed-days': S.feedDays = +a.dataset.d; S.ai.feedSum = null; render(); break;
+    case 'feed-more': S.feedAll = !S.feedAll; render(); break;
+    case 'feed-ai': aiFeed(); break;
+    case 'feed-ai-discard': S.ai.feedSum = null; render(); break;
     case 'confirm-revoke': confirmRevoke(); break;
     case 'delete-dec': deleteDec(id); break;
     case 'acta': aiActa(a.dataset.date); break;
@@ -1602,7 +1695,7 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.id === 'f-mine') { S.mineOnly = t.checked; try { localStorage.setItem('pd27.mine', t.checked ? '1' : '0'); } catch (er) {} render(); return; }
-  if (t.dataset.inline && t.dataset.id) { const f = t.dataset.inline; const i = initById(t.dataset.id); if (i && guardWrite()) write(db.doc('initiatives/' + i.id).update({ [f]: t.value, updatedAt: Date.now() }), `${i.code}: ${f === 'stage' ? 'etapa' : 'salud'} actualizada`); return; }
+  if (t.dataset.inline && t.dataset.id) { const f = t.dataset.inline; const i = initById(t.dataset.id); if (i && guardWrite()) { const prev = i[f]; const ref = db.doc('initiatives/' + i.id); write(ref.update({ [f]: t.value, updatedAt: Date.now() })).then(ok => { if (ok) toast(`${i.code}: ${f === 'stage' ? 'etapa' : 'salud'} cambiada a «${f === 'stage' ? t.value : HEALTH[t.value]}»`, () => write(ref.update({ [f]: prev, updatedAt: Date.now() }), 'Cambio deshecho')); }); } return; }
   if (t.id === 'f-area') { S.fArea = t.value; render(); }
   else if (t.id === 'f-method') { S.fMethod = t.value; render(); }
   else if (t.id === 'b-init') { S.boardInit = t.value; try { localStorage.setItem('pd27.board', t.value); } catch (er) {} render(); }
