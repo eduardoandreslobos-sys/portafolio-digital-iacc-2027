@@ -3,26 +3,45 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
-/* Layout: rail de navegación + lienzo operativo denso (tabla ranking, roadmap anual, tablero, métricas); detalle en panel lateral */
+/* Layout: rail de navegación tenue + lienzo operativo denso (ranking, roadmap, tablero, métricas, comité); detalle en panel lateral.
+   Tema generado desde 3 entradas (como Linear 2026): --base-hue (neutros cálidos), --accent-hue y --contrast (0 a 1). Todo en OKLCH. */
 :root{
-  --bg:#F4F5F8; --surface:#FFFFFF; --surface-2:#ECEEF3; --line:#DADEE7; --fg:#151923; --muted:#596273;
-  --accent:#3347D1; --accent-ink:#FFFFFF; --accent-soft:#E4E8FC;
-  --ok:#17784F; --ok-soft:#DBF1E6; --warn:#9A5B00; --warn-soft:#FAEACC; --bad:#B83232; --bad-soft:#F7DCDC;
-  --agent:#7136B8; --agent-soft:#EEE4FA; --scrim:rgba(12,15,24,.42); --shadow:0 12px 40px rgba(16,20,40,.14);
+  --base-hue:75; --accent-hue:268; --contrast:0.5;
+  --nc:0.008; --ac:0.17; --k:var(--contrast);
+  --bg:oklch(97.4% var(--nc) var(--base-hue));
+  --rail:oklch(95.6% var(--nc) var(--base-hue));
+  --surface:oklch(99.5% calc(var(--nc) * .5) var(--base-hue));
+  --surface-2:oklch(94.6% var(--nc) var(--base-hue));
+  --line:oklch(calc(91.5% - var(--k) * 4%) var(--nc) var(--base-hue));
+  --line-soft:oklch(calc(94% - var(--k) * 3%) var(--nc) var(--base-hue));
+  --fg:oklch(calc(23% - var(--k) * 6%) calc(var(--nc) * 1.5) var(--base-hue));
+  --muted:oklch(calc(53% - var(--k) * 10%) var(--nc) var(--base-hue));
+  --accent:oklch(50% var(--ac) var(--accent-hue)); --accent-ink:oklch(99% 0 0); --accent-soft:oklch(94% calc(var(--ac) * .25) var(--accent-hue));
+  --ok:oklch(50% .11 155); --ok-soft:oklch(94.5% .04 155);
+  --warn:oklch(55% .12 70); --warn-soft:oklch(94.5% .05 80);
+  --bad:oklch(52% .17 25); --bad-soft:oklch(94.5% .035 25);
+  --agent:oklch(48% .17 305); --agent-soft:oklch(94.5% .04 305);
+  --scrim:oklch(20% .01 var(--base-hue) / .4); --shadow:0 12px 40px oklch(20% .02 var(--base-hue) / .14);
   --f-display:'Bricolage Grotesque','Avenir Next','Segoe UI',sans-serif;
   --f-body:'Instrument Sans','Helvetica Neue','Segoe UI',system-ui,sans-serif;
   --f-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0E1117; --surface:#151922; --surface-2:#1C212C; --line:#2A303D; --fg:#E6E9F0; --muted:#97A0B2;
-  --accent:#8E9CFF; --accent-ink:#0E1117; --accent-soft:#222A55;
-  --ok:#4CC48C; --ok-soft:#14301F; --warn:#E5A53F; --warn-soft:#33260E; --bad:#F27474; --bad-soft:#3B1A1B;
-  --agent:#B88DF4; --agent-soft:#2A1E3E; --scrim:rgba(0,0,0,.55); --shadow:0 12px 40px rgba(0,0,0,.5); color-scheme:dark }}
+  --bg:oklch(20.5% var(--nc) var(--base-hue)); --rail:oklch(18% var(--nc) var(--base-hue)); --surface:oklch(23.5% var(--nc) var(--base-hue)); --surface-2:oklch(27% var(--nc) var(--base-hue));
+  --line:oklch(calc(31% + var(--k) * 5%) var(--nc) var(--base-hue)); --line-soft:oklch(calc(27.5% + var(--k) * 3%) var(--nc) var(--base-hue));
+  --fg:oklch(calc(91% + var(--k) * 5%) calc(var(--nc) * .8) var(--base-hue)); --muted:oklch(calc(68% + var(--k) * 8%) var(--nc) var(--base-hue));
+  --accent:oklch(74% calc(var(--ac) * .8) var(--accent-hue)); --accent-ink:oklch(20% .02 var(--accent-hue)); --accent-soft:oklch(32% calc(var(--ac) * .4) var(--accent-hue));
+  --ok:oklch(75% .13 155); --ok-soft:oklch(30% .05 155); --warn:oklch(79% .13 75); --warn-soft:oklch(31% .05 75);
+  --bad:oklch(72% .15 25); --bad-soft:oklch(30% .06 25); --agent:oklch(75% .13 305); --agent-soft:oklch(30% .06 305);
+  --scrim:oklch(8% 0 0 / .55); --shadow:0 12px 40px oklch(5% 0 0 / .5); color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#0E1117; --surface:#151922; --surface-2:#1C212C; --line:#2A303D; --fg:#E6E9F0; --muted:#97A0B2;
-  --accent:#8E9CFF; --accent-ink:#0E1117; --accent-soft:#222A55;
-  --ok:#4CC48C; --ok-soft:#14301F; --warn:#E5A53F; --warn-soft:#33260E; --bad:#F27474; --bad-soft:#3B1A1B;
-  --agent:#B88DF4; --agent-soft:#2A1E3E; --scrim:rgba(0,0,0,.55); --shadow:0 12px 40px rgba(0,0,0,.5); color-scheme:dark }
+  --bg:oklch(20.5% var(--nc) var(--base-hue)); --rail:oklch(18% var(--nc) var(--base-hue)); --surface:oklch(23.5% var(--nc) var(--base-hue)); --surface-2:oklch(27% var(--nc) var(--base-hue));
+  --line:oklch(calc(31% + var(--k) * 5%) var(--nc) var(--base-hue)); --line-soft:oklch(calc(27.5% + var(--k) * 3%) var(--nc) var(--base-hue));
+  --fg:oklch(calc(91% + var(--k) * 5%) calc(var(--nc) * .8) var(--base-hue)); --muted:oklch(calc(68% + var(--k) * 8%) var(--nc) var(--base-hue));
+  --accent:oklch(74% calc(var(--ac) * .8) var(--accent-hue)); --accent-ink:oklch(20% .02 var(--accent-hue)); --accent-soft:oklch(32% calc(var(--ac) * .4) var(--accent-hue));
+  --ok:oklch(75% .13 155); --ok-soft:oklch(30% .05 155); --warn:oklch(79% .13 75); --warn-soft:oklch(31% .05 75);
+  --bad:oklch(72% .15 25); --bad-soft:oklch(30% .06 25); --agent:oklch(75% .13 305); --agent-soft:oklch(30% .06 305);
+  --scrim:oklch(8% 0 0 / .55); --shadow:0 12px 40px oklch(5% 0 0 / .5); color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -39,30 +58,32 @@ h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:
 .eyebrow{font:600 11px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
 .app{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100%}
-.rail{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;gap:22px;padding:22px 14px;background:var(--surface);border-right:1px solid var(--line)}
-.brand{font:700 18px/1.15 var(--f-display);padding:0 8px}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;gap:20px;padding:20px 12px;background:var(--rail);border-right:1px solid var(--line-soft)}
+.brand{font:700 16px/1.2 var(--f-display);padding:0 8px;color:var(--fg)}
 .brand small{display:block;margin-top:4px;font:600 10.5px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .nav{display:flex;flex-direction:column;gap:2px}
-.nav button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--muted);font-weight:500;white-space:nowrap}
+.nav button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:7px;color:var(--muted);font-weight:500;font-size:13.5px;white-space:nowrap}
 .nav button:hover{color:var(--fg);background:var(--surface-2)}
-.nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.nav button[aria-current="page"]{background:var(--surface);color:var(--fg);box-shadow:0 0 0 1px var(--line-soft)}
 .nav button:focus-visible{outline:2px solid var(--accent)}
-.nav svg{width:16px;height:16px;flex:none}
-.nav kbd{margin-left:auto}
+.nav svg{width:14px;height:14px;flex:none;opacity:.8}
+.nav kbd{margin-left:auto;opacity:0;transition:opacity .15s}
+.nav button:hover kbd,.nav button:focus-visible kbd{opacity:1}
 kbd{font:500 10.5px var(--f-mono);padding:1px 5px;border-radius:4px;border:1px solid var(--line);color:var(--muted);background:var(--bg)}
 .rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:0 8px}
-.cmdk{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px}
-.cmdk:hover{border-color:var(--accent);color:var(--fg)}
+.cmdk{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line-soft);border-radius:7px;color:var(--muted);font-size:12.5px;background:var(--surface)}
+.cmdk:hover{border-color:var(--line);color:var(--fg)}
 .cmdk:focus-visible{outline:2px solid var(--accent)}
 .me{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);min-width:0}
 
 .main{min-width:0;padding-inline:32px;padding-block:26px 80px}
-.page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;margin-bottom:18px}
-.page-head h1{font-size:28px;font-weight:700}
-.page-head p{margin:4px 0 0;color:var(--muted);max-width:64ch}
+.page-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 20px;margin-bottom:20px}
+.page-head .row{min-height:34px}
+.page-head h1{font-size:24px;font-weight:700}
+.page-head p{margin:4px 0 0;color:var(--muted);max-width:68ch;font-size:13px}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
 .toolbar .grow{flex:1 1 200px;min-width:0}
-.banner{display:block;padding:10px 14px;border-radius:10px;background:var(--warn-soft);color:var(--warn);margin-bottom:16px;font-size:13px}
+.banner{display:block;padding:9px 14px;border-radius:8px;background:var(--surface-2);color:var(--fg);margin-bottom:16px;font-size:12.5px;border-left:3px solid var(--warn)}
 
 .btn{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-body);padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;white-space:nowrap}
 .btn:hover{border-color:var(--muted)}
@@ -91,6 +112,10 @@ textarea.inp{resize:vertical;min-height:72px;line-height:1.5}
 
 .chip{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500;background:var(--surface-2);color:var(--muted);white-space:nowrap;line-height:1.5}
 .chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+/* Estado = color + forma + texto: círculo en curso, triángulo en riesgo, cuadrado fuera de curso */
+.h-en_riesgo .dot{border-radius:0;width:8px;height:7px;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.h-fuera .dot{border-radius:1.5px;width:7px;height:7px}
+.chip.accent .dot{border-radius:1px;transform:rotate(45deg);width:6px;height:6px}
 .h-en_curso{background:var(--ok-soft);color:var(--ok)}
 .h-en_riesgo{background:var(--warn-soft);color:var(--warn)}
 .h-fuera{background:var(--bad-soft);color:var(--bad)}
@@ -112,11 +137,11 @@ textarea.inp{resize:vertical;min-height:72px;line-height:1.5}
 /* Portafolio */
 .summary{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:16px;font-size:13px;color:var(--muted)}
 .summary b{color:var(--fg);font:600 15px var(--f-mono);margin-right:4px}
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface)}
 table{width:100%;border-collapse:collapse}
 .pf{min-width:960px}
-th{font:600 11px var(--f-body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
 tbody tr:last-child td{border-bottom:0}
 tr.clickable{cursor:pointer}
 tr.clickable:hover td{background:var(--surface-2)}
@@ -126,16 +151,16 @@ tr.clickable:hover td{background:var(--surface-2)}
 .ipcell{width:120px}
 .ip{font:600 16px var(--f-mono);font-variant-numeric:tabular-nums}
 .ipbar{height:4px;border-radius:2px;background:var(--surface-2);margin-top:4px;overflow:hidden}
-.ipbar i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.ipbar i{display:block;height:100%;background:var(--muted);border-radius:2px;opacity:.55}
 tr.capline td{padding:0;border-bottom:0}
-.capline-inner{display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--accent-soft);color:var(--accent);font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase}
-.capline-inner::after{content:"";flex:1;border-top:1px dashed var(--accent)}
+.capline-inner{display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--surface-2);color:var(--fg);font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase}
+.capline-inner::after{content:"";flex:1;border-top:1px dashed var(--muted)}
 
 /* Roadmap */
-.rm-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.rm-wrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface)}
 .rm{min-width:980px;position:relative}
 .rm-links{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.dec{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.dec{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
 .dec.rev{background:var(--bg)}
 .dec.rev .dec-t{text-decoration:line-through;color:var(--muted)}
 .dec-t{font:600 15px/1.35 var(--f-body);margin:0;letter-spacing:0}
@@ -172,11 +197,11 @@ tr.capline td{padding:0;border-bottom:0}
 
 /* Tablero */
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(264px,1fr);gap:12px;overflow-x:auto;padding-bottom:10px}
-.col{background:var(--surface-2);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:360px}
+.col{background:var(--rail);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:360px}
 .col.over{outline:2px dashed var(--accent);outline-offset:-2px}
 .col-head{display:flex;align-items:center;gap:8px;padding:2px 4px 4px;font-weight:600;font-size:13px}
 .col-head .num{color:var(--muted);font-size:12px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:10px 11px;display:flex;flex-direction:column;gap:8px;cursor:grab;text-align:left;width:100%}
+.card{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:10px 11px;display:flex;flex-direction:column;gap:8px;cursor:grab;text-align:left;width:100%}
 .card:hover{border-color:var(--muted)}
 .card.dragging{opacity:.5}
 .card.blocked{box-shadow:inset 3px 0 0 var(--bad)}
@@ -195,16 +220,34 @@ tr.capline td{padding:0;border-bottom:0}
 
 /* Métricas */
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:22px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.tile{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
 .tile .v{font:700 28px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
 .tile .v small{font:500 13px var(--f-body);color:var(--muted);margin-left:4px}
 .tile .l{font-size:12.5px;color:var(--muted)}
 .tile.ctx{border-style:dashed}
+.kpis{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);gap:12px;margin-bottom:10px}
+.kpis .tiles{grid-template-columns:repeat(3,minmax(0,1fr));margin:0}
+.tile.hero{padding:20px 22px;gap:6px;justify-content:center}
+.tile.hero .hv{font:700 84px/0.95 var(--f-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tile.hero .hv small{font:600 28px var(--f-display);color:var(--muted);margin-left:4px}
+.tile-btn{text-align:left;cursor:pointer;font:inherit;color:inherit}
+.tile-btn:hover{border-color:var(--line)}
+.ctxline{margin:0 0 22px;font-size:12.5px;color:var(--muted)}
+.ctxline b{color:var(--fg);font-weight:600}
+.linkish{all:unset;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.linkish:focus-visible{outline:2px solid var(--accent)}
+.sh{display:inline-block;width:8px;height:7px;background:currentColor;margin-right:6px;vertical-align:1px}
+.sh.tri{clip-path:polygon(50% 0,100% 100%,0 100%)}
+.sh.sq{width:7px;border-radius:1.5px}
+.rm-bar .sdot{position:relative;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.rm-bar.h-en_riesgo .sdot{border-radius:0;width:8px;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.rm-bar.h-fuera .sdot{border-radius:1.5px}
+@media (max-width:900px){.kpis{grid-template-columns:minmax(0,1fr)}.kpis .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile.hero .hv{font-size:64px}}
 .sec{margin-top:26px}
 .sec h2{font-size:18px;margin-bottom:4px}
 .sec>p{margin:0 0 12px;color:var(--muted);font-size:13px;max-width:72ch}
 .panels{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:16px;min-width:0}
 .qchart{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:end;height:190px;padding:8px 4px 0;border-bottom:1px solid var(--line);background-image:linear-gradient(to top,var(--line) 1px,transparent 1px);background-size:100% 25%}
 .qcol{display:flex;flex-direction:column;justify-content:flex-end;height:100%;align-items:stretch;gap:2px;position:relative}
 .qseg{border-radius:3px}
@@ -762,7 +805,7 @@ function viewRoadmap() {
       else {
         const l = pos(s), w = Math.max(pos(e + 86400000) - l, 2.5);
         const iss = allDepIssues(i, ranks);
-        track = `<div class="rm-bar h-${esc(i.health)} ${i.method === 'waterfall' ? 'waterfall' : ''}" data-bar="${esc(i.id)}" style="left:${l}%;width:${w}%;color:var(--${i.health === 'fuera' ? 'bad' : i.health === 'en_riesgo' ? 'warn' : 'ok'})" data-action="open-init" data-id="${esc(i.id)}" data-tab="${iss.length ? 'dependencias' : 'resumen'}" title="${esc(i.name)} · ${Math.round(prog * 100)}% de ítems hechos${iss.length ? ' · ' + esc(iss.map(x => x.t).join(' · ')) : ''}"><span class="prog" style="width:${prog * 100}%"></span><span style="position:relative;color:var(--fg)">${s < y0 ? '← ' : ''}${iss.length ? '<b style="color:var(--bad)">⚠</b> ' : ''}${esc(i.code)} · ${Math.round(prog * 100)}%${e >= y1 ? ' →' : ''}</span></div>`;
+        track = `<div class="rm-bar h-${esc(i.health)} ${i.method === 'waterfall' ? 'waterfall' : ''}" data-bar="${esc(i.id)}" style="left:${l}%;width:${w}%;color:var(--${i.health === 'fuera' ? 'bad' : i.health === 'en_riesgo' ? 'warn' : 'ok'})" data-action="open-init" data-id="${esc(i.id)}" data-tab="${iss.length ? 'dependencias' : 'resumen'}" title="${esc(i.name)} · ${Math.round(prog * 100)}% de ítems hechos${iss.length ? ' · ' + esc(iss.map(x => x.t).join(' · ')) : ''}"><span class="prog" style="width:${prog * 100}%"></span><span class="sdot" aria-hidden="true"></span><span style="position:relative;color:var(--fg)">${s < y0 ? '← ' : ''}${iss.length ? '<b style="color:var(--bad)">⚠</b> ' : ''}${esc(i.code)} · ${Math.round(prog * 100)}%${e >= y1 ? ' →' : ''}</span></div>`;
         S.items.filter(t => t.initiativeId === i.id && t.type === 'hito' && parseD(t.due) != null && parseD(t.due) >= y0 && parseD(t.due) < y1).forEach(m => {
           track += `<span class="rm-ms ${m.status === 'done' ? 'done' : ''}" style="left:${pos(parseD(m.due))}%" data-action="open-item" data-id="${esc(m.id)}" title="Hito: ${esc(m.title)} · ${fmtD(m.due)}"></span>`;
         });
@@ -847,17 +890,6 @@ function viewMetrics() {
   const assigned = its.filter(t => t.assignee);
   const agentShare = assigned.length ? assigned.filter(t => refKind(t.assignee) === 'a').length / assigned.length : 0;
   const agentNoDri = its.filter(t => refKind(t.assignee) === 'a' && !t.dri).length;
-  const tiles = `<div class="tiles">
-    <div class="tile"><span class="v">${activeI.length}</span><span class="l">Iniciativas activas</span></div>
-    <div class="tile"><span class="v" style="color:${atRisk ? 'var(--warn)' : 'inherit'}">${atRisk}</span><span class="l">En riesgo o fuera de curso</span></div>
-    <div class="tile"><span class="v">${wip}</span><span class="l">Ítems en curso o revisión (WIP)</span></div>
-    <div class="tile"><span class="v" style="color:${blocked ? 'var(--bad)' : 'inherit'}">${blocked}</span><span class="l">Bloqueados</span></div>
-    <div class="tile"><span class="v">${thr}</span><span class="l">Ítems terminados en 14 días</span></div>
-    <div class="tile"><span class="v">${cyc.length ? avg(cyc).toFixed(1) : '—'}<small>${cyc.length ? 'días' : ''}</small></span><span class="l">Tiempo de ciclo promedio</span></div>
-    <div class="tile"><span class="v" style="color:${lateMs ? 'var(--bad)' : 'inherit'}">${lateMs}</span><span class="l">Hitos vencidos</span></div>
-    ${(() => { const rk = rankMap(); const n = activeI.reduce((a, i) => a + allDepIssues(i, rk).length, 0); return `<button type="button" class="tile" style="text-align:left;cursor:pointer;font:inherit;color:inherit" data-action="go" data-view="roadmap"><span class="v" style="color:${n ? 'var(--bad)' : 'inherit'}">${n}</span><span class="l">Conflictos de dependencias</span></button>`; })()}
-    <button type="button" class="tile" style="text-align:left;cursor:pointer;font:inherit;color:inherit" data-action="go" data-view="comite"><span class="v">${S.decisions.filter(d => d.status !== 'revocada' && (d.initiativeIds || []).some(x => ids.has(x))).length}</span><span class="l">Decisiones vigentes del comité</span></button>
-    <div class="tile ctx"><span class="v">${Math.round(agentShare * 100)}<small>%</small></span><span class="l">Ítems asignados a agentes IA (contexto)${agentNoDri ? ` · <b style="color:var(--bad)">${agentNoDri} sin responsable</b>` : ''}</span></div></div>`;
   // KR
   const krs = []; inits.forEach(i => (i.krs || []).forEach(k => krs.push({ i, k })));
   const krHtml = krs.length ? krs.map(({ i, k }) => {
@@ -865,6 +897,26 @@ function viewMetrics() {
     return `<div class="kr"><div style="min-width:0"><div style="font-weight:500;overflow-wrap:anywhere">${esc(k.name)}</div><div class="iname-sub"><span class="code">${esc(i.code)}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(i.name)}</span></div></div>
       <div><div class="kr-bar"><i style="width:${p * 100}%"></i></div><div class="kr-nums"><span>${esc(k.baseline)}${esc(k.unit || '')}</span><span style="color:var(--fg)">${esc(k.current)}${esc(k.unit || '')}</span><span>${esc(k.target)}${esc(k.unit || '')}</span></div></div></div>`;
   }).join('') : '<p class="muted small">Ninguna iniciativa tiene resultados clave todavía. Agrégalos en la pestaña Resultados de cada iniciativa.</p>';
+  // Indicador estrella (resultado) + 6 indicadores de flujo; el resto queda como línea de contexto
+  const krP = krs.map(({ k }) => { const b = +k.baseline, t = +k.target, c = +k.current; return (t - b) !== 0 && isFinite(c) && isFinite(b) && isFinite(t) ? clamp((c - b) / (t - b), 0, 1) : null; }).filter(x => x != null);
+  const krAvg = krP.length ? avg(krP) : null;
+  const krOn = krP.filter(x => x >= 0.5).length;
+  const rk = rankMap(); const depN = activeI.reduce((a, i) => a + allDepIssues(i, rk).length, 0);
+  const decN = S.decisions.filter(d => d.status !== 'revocada' && (d.initiativeIds || []).some(x => ids.has(x))).length;
+  const tile = (v, l, tone, act) => `<${act ? `button type="button" data-action="go" data-view="${act}"` : 'div'} class="tile${act ? ' tile-btn' : ''}"><span class="v"${tone ? ` style="color:var(--${tone})"` : ''}>${v}</span><span class="l">${l}</span></${act ? 'button' : 'div'}>`;
+  const tiles = `<div class="kpis">
+    <div class="tile hero"><span class="eyebrow">Indicador principal · resultados</span><span class="hv">${krAvg != null ? Math.round(krAvg * 100) : '—'}<small>${krAvg != null ? '%' : ''}</small></span>
+      <span class="l">Avance promedio desde la línea base hacia la meta en ${krP.length} resultado${krP.length === 1 ? '' : 's'} clave${krP.length ? ` · ${krOn} sobre la mitad del camino` : ''}</span>
+      ${krAvg != null ? `<div class="kr-bar" style="margin-top:6px"><i style="width:${krAvg * 100}%"></i></div>` : '<span class="small muted">Agrega resultados clave en cada iniciativa para medir el portafolio por resultados y no por entregas.</span>'}</div>
+    <div class="tiles">
+      ${tile(activeI.length, 'Iniciativas activas')}
+      ${tile(atRisk, (atRisk ? '<span class="sh tri"></span>' : '') + 'En riesgo o fuera de curso', atRisk ? 'warn' : '')}
+      ${tile(wip, 'Ítems en curso o revisión')}
+      ${tile(blocked, (blocked ? '<span class="sh sq"></span>' : '') + 'Bloqueados', blocked ? 'bad' : '')}
+      ${tile(thr, 'Terminados en 14 días')}
+      ${tile(depN, (depN ? '<span class="sh sq"></span>' : '') + 'Conflictos de dependencias', depN ? 'bad' : '', 'roadmap')}
+    </div></div>
+    <p class="ctxline">Contexto: tiempo de ciclo ${cyc.length ? '<b class="num">' + avg(cyc).toFixed(1) + ' días</b>' : 'sin datos'} · hitos vencidos <b class="num">${lateMs}</b> · <button type="button" class="linkish" data-action="go" data-view="comite">decisiones vigentes <b class="num">${decN}</b></button> · ítems asignados a agentes IA <b class="num">${Math.round(agentShare * 100)}%</b>${agentNoDri ? ` · <span style="color:var(--bad)"><span class="sh sq"></span>${agentNoDri} sin persona responsable</span>` : ''}</p>`;
   // Quarters
   const Y = S.year; const qs = [0, 1, 2, 3].map(q => { const a = Date.UTC(Y, q * 3, 1), b = Date.UTC(Y, q * 3 + 3, 1); const act = inits.filter(i => { const s = parseD(i.start), e = parseD(i.end); return s != null && e != null && s < b && e >= a && i.stage !== 'Cerrada'; }); return { q, act }; });
   const qmax = Math.max(1, ...qs.map(x => x.act.length));
