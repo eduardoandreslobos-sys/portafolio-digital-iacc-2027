@@ -59,6 +59,32 @@
 html,body{height:100%}
 body{margin:0}
 .no-ai .btn.ai,.no-ai .ai-box{display:none!important}
+/* P2: edición directa, foco por rol, tooltips, transición */
+.cellsel{font:inherit;font-size:12.5px;color:var(--fg);background:transparent;border:1px solid transparent;border-radius:6px;padding:3px 4px;cursor:pointer;max-width:130px}
+.cellsel:hover{border-color:var(--line);background:var(--surface)}
+.cellsel:focus{outline:2px solid var(--accent);outline-offset:0}
+.cellchip{cursor:pointer;padding-right:4px}
+.cellsel.bare{color:inherit;font-size:12px;font-weight:500;padding:0 2px;border:0;max-width:none;background:transparent}
+.cellsel.bare:hover{background:transparent}
+.cellsel.bare option{color:var(--fg);background:var(--surface)}
+.focus{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.focus-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.focus-list{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:4px 16px}
+.focus-item{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:4px;align-items:baseline;width:100%;padding:6px 8px;border-radius:6px;font-size:13px;line-height:1.4}
+.focus-item:hover{background:var(--surface-2)}
+.focus-item:focus-visible{outline:2px solid var(--accent)}
+.tip{position:fixed;inset:auto;margin:0;left:0;top:0;width:max-content;max-width:300px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:10px 12px;font-size:12.5px;z-index:45;display:none;pointer-events:none}
+.tip.on{display:block}
+.tip-h{display:flex;gap:6px;align-items:center;margin-bottom:4px}
+.tip-t{font-weight:600;line-height:1.35;margin-bottom:6px}
+.tip-g{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;color:var(--muted)}
+.tip-g b{color:var(--fg);font-weight:500}
+.tip-iss{margin-top:8px;color:var(--bad);display:flex;flex-direction:column;gap:2px}
+.tip-f{margin-top:8px;color:var(--muted);font-size:11.5px}
+.rm-bar:focus-visible,.rm-ms:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::view-transition-group(peek){animation-duration:.24s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+::view-transition-old(peek),::view-transition-new(peek){height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -391,6 +417,7 @@ tr.capline td{padding:0;border-bottom:0}
 <div class="modal" id="modal" hidden></div>
 <div class="modal" id="palette" hidden><div class="pal" role="dialog" aria-label="Comandos"><input id="pal-q" placeholder="Busca una iniciativa o escribe un comando…" autocomplete="off"><div class="pal-list" id="pal-list" role="listbox"></div></div></div>
 <div class="toast" id="toast" hidden role="status"></div>
+<div class="tip" id="tip" popover="manual" role="tooltip"></div>
 
 <script>
 (() => {
@@ -445,7 +472,8 @@ const S = {
   boardInit: 'all', boardFilter: 'todos', q: '', fArea: 'all', fMethod: 'all', year: 2027,
   ai: { decomp: null, decompBusy: false, updBusy: false }, modal: null
 };
-try { const v = localStorage.getItem('pd27.view'); if (VIEWS.some(x => x.k === v)) S.view = v; const b = localStorage.getItem('pd27.board'); if (b) S.boardInit = b; } catch (e) {}
+S.role = 'all'; S.mineOnly = false;
+try { const v = localStorage.getItem('pd27.view'); if (VIEWS.some(x => x.k === v)) S.view = v; const b = localStorage.getItem('pd27.board'); if (b) S.boardInit = b; const r = localStorage.getItem('pd27.role'); if (['all', 'po', 'pm', 'pmo'].includes(r)) S.role = r; S.mineOnly = localStorage.getItem('pd27.mine') === '1'; } catch (e) {}
 
 let db = null, user = null, sample = null;
 
@@ -738,16 +766,53 @@ function headActions() {
 }
 function filteredInits() {
   const q = norm(S.q);
-  return S.inits.filter(i => (S.fArea === 'all' || i.area === S.fArea) && (S.fMethod === 'all' || i.method === S.fMethod) && (!q || norm(i.name + ' ' + i.code + ' ' + i.area).includes(q)));
+  const mine = S.role !== 'all' && S.mineOnly && S.uid ? 'u:' + S.uid : null;
+  return S.inits.filter(i => (S.fArea === 'all' || i.area === S.fArea) && (S.fMethod === 'all' || i.method === S.fMethod) && (!q || norm(i.name + ' ' + i.code + ' ' + i.area).includes(q)) && (!mine || i[S.role] === mine));
 }
 function filtersBar(extra = '') {
   return `<div class="toolbar"><input id="f-q" class="inp grow" placeholder="Filtrar por nombre, código o área" value="${esc(S.q)}" aria-label="Filtrar iniciativas">
     <select id="f-area" class="inp" style="width:auto" aria-label="Área"><option value="all">Todas las áreas</option>${S.config.areas.map(a => `<option ${S.fArea === a ? 'selected' : ''}>${esc(a)}</option>`).join('')}</select>
-    <select id="f-method" class="inp" style="width:auto" aria-label="Método"><option value="all">Todos los métodos</option>${Object.entries(METHODS).map(([k, l]) => `<option value="${k}" ${S.fMethod === k ? 'selected' : ''}>${l}</option>`).join('')}</select>${extra}</div>`;
+    <select id="f-method" class="inp" style="width:auto" aria-label="Método"><option value="all">Todos los métodos</option>${Object.entries(METHODS).map(([k, l]) => `<option value="${k}" ${S.fMethod === k ? 'selected' : ''}>${l}</option>`).join('')}</select>${S.role !== 'all' ? `<label class="check small"><input type="checkbox" id="f-mine" ${S.mineOnly ? 'checked' : ''}> Solo donde soy ${ROLE_LABEL[S.role]}</label>` : ''}${extra}</div>`;
 }
 function healthChip(h) { return `<span class="chip h-${esc(h || 'en_curso')}"><span class="dot"></span>${HEALTH[h] || HEALTH.en_curso}</span>`; }
 function methodChip(m) { return `<span class="chip outline">${METHODS[m] || '—'}</span>`; }
 function exampleChip(i) { return i.ejemplo ? '<span class="chip example" title="Registro de ejemplo; puedes quitarlo">Ejemplo</span>' : ''; }
+
+/* ---------- Vistas por rol ---------- */
+const ROLE_LABEL = { po: 'PO', pm: 'PM', pmo: 'PMO' };
+const ROLE_HINT = { all: 'Todo el portafolio, sin foco por rol.', po: 'Valor y backlog: evaluaciones pendientes, resultados clave y trabajo de agentes por revisar.', pm: 'Plan y entrega: hitos próximos, bloqueos y conflictos de fechas.', pmo: 'Gobierno: consenso, capacidad, dependencias y decisiones pendientes.' };
+function roleSwitch() { return `<div class="seg-filter" role="group" aria-label="Vista por rol">${[['all', 'Todos'], ['po', 'PO'], ['pm', 'PM'], ['pmo', 'PMO']].map(([k, l]) => `<button type="button" data-action="role" data-r="${k}" aria-pressed="${S.role === k}">${l}</button>`).join('')}</div>`; }
+function focusItems() {
+  const r = S.role, out = [], me = S.uid ? 'u:' + S.uid : null, today = todayISO(), in30 = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+  const act = filteredInits().filter(i => i.stage !== 'Cerrada'); const ids = new Set(act.map(i => i.id)); const ranks = rankMap();
+  const its = S.items.filter(t => ids.has(t.initiativeId) && t.type !== 'epica' && t.status !== 'done');
+  const code = id => (initById(id) || {}).code || '';
+  if (r === 'po') {
+    const mine = S.uid && S.votes[S.uid] ? S.votes[S.uid].scores || {} : {};
+    act.filter(i => !complete(mine[i.id])).forEach(i => out.push({ sev: 1, t: `Evalúa ${i.code} · ${i.name}`, a: `data-action="open-init" data-id="${esc(i.id)}" data-tab="evaluar"` }));
+    act.filter(i => !(i.krs || []).length && (!me || i.po === me)).forEach(i => out.push({ sev: 1, t: `${i.code} no tiene resultados clave`, a: `data-action="open-init" data-id="${esc(i.id)}" data-tab="resultados"` }));
+    its.filter(t => t.status === 'review' && refKind(t.assignee) === 'a').forEach(t => out.push({ sev: 2, t: `Revisa el trabajo de ${refVal(t.assignee)}: ${t.title} (${code(t.initiativeId)})`, a: `data-action="open-item" data-id="${esc(t.id)}"` }));
+    its.filter(t => refKind(t.assignee) === 'a' && !t.dri).forEach(t => out.push({ sev: 3, t: `Asigna persona responsable a «${t.title}» (${code(t.initiativeId)})`, a: `data-action="open-item" data-id="${esc(t.id)}"` }));
+  } else if (r === 'pm') {
+    its.filter(t => t.type === 'hito' && t.due && t.due < today).forEach(t => out.push({ sev: 3, t: `Hito vencido: ${t.title} (${code(t.initiativeId)}, ${fmtD(t.due)})`, a: `data-action="open-item" data-id="${esc(t.id)}"` }));
+    its.filter(t => t.blocked).forEach(t => out.push({ sev: 3, t: `Bloqueado: ${t.title} (${code(t.initiativeId)})`, a: `data-action="open-item" data-id="${esc(t.id)}"` }));
+    act.forEach(i => allDepIssues(i, ranks).filter(x => x.k === 'fecha' || x.k === 'pausa').forEach(x => out.push({ sev: 2, t: `${i.code}: ${x.t}`, a: `data-action="open-init" data-id="${esc(i.id)}" data-tab="dependencias"` })));
+    its.filter(t => t.type === 'hito' && t.due && t.due >= today && t.due <= in30).forEach(t => out.push({ sev: 1, t: `Hito en los próximos 30 días: ${t.title} (${code(t.initiativeId)}, ${fmtD(t.due)})`, a: `data-action="open-item" data-id="${esc(t.id)}"` }));
+  } else if (r === 'pmo') {
+    act.forEach(i => { const c = consensus(i); if (c.state === 'disenso') out.push({ sev: 2, t: `${i.code} sin consenso entre evaluadores: conversar y fijar puntaje`, a: `data-action="open-init" data-id="${esc(i.id)}" data-tab="evaluar"` }); });
+    act.forEach(i => allDepIssues(i, ranks).filter(x => x.k === 'capacidad' || x.k === 'ciclo').forEach(x => out.push({ sev: 3, t: `${i.code}: ${x.t}`, a: `data-action="open-init" data-id="${esc(i.id)}" data-tab="dependencias"` })));
+    act.filter(i => i.stage !== 'Idea' && !decisionsFor(i.id).some(d => d.status !== 'revocada')).forEach(i => out.push({ sev: 1, t: `${i.code} (${i.stage}) no tiene decisión del comité registrada`, a: `data-action="new-dec" data-init="${esc(i.id)}"` }));
+    const d14 = Date.now() - 14 * 86400000;
+    act.filter(i => i.stage === 'En ejecución' && !S.updates.some(u => u.initiativeId === i.id && u.at >= d14)).forEach(i => out.push({ sev: 2, t: `${i.code} en ejecución sin update en 14 días`, a: `data-action="open-init" data-id="${esc(i.id)}" data-tab="updates"` }));
+  }
+  return out.sort((a, b) => b.sev - a.sev);
+}
+function focusPanel() {
+  const items = S.role === 'all' ? [] : focusItems(); const shown = items.slice(0, 6);
+  const sh = sev => sev === 3 ? '<span class="sh sq" style="color:var(--bad)"></span>' : sev === 2 ? '<span class="sh tri" style="color:var(--warn)"></span>' : '<span class="sh" style="color:var(--muted);border-radius:50%;width:7px"></span>';
+  return `<section class="focus" aria-label="Foco por rol"><div class="focus-head"><div><div class="eyebrow">Vista por rol</div><div class="small muted">${ROLE_HINT[S.role]}</div></div>${roleSwitch()}</div>
+    ${S.role === 'all' ? '' : shown.length ? `<ul class="focus-list">${shown.map(x => `<li><button type="button" class="focus-item" ${x.a}>${sh(x.sev)}<span>${esc(x.t)}</span></button></li>`).join('')}</ul>${items.length > shown.length ? `<p class="small muted" style="margin:6px 0 0">Y ${items.length - shown.length} más.</p>` : ''}` : '<p class="small muted" style="margin:8px 0 0">Nada pendiente para este rol.</p>'}</section>`;
+}
 
 /* ---------- Vista: Portafolio ---------- */
 function viewPortfolio() {
@@ -771,8 +836,8 @@ function viewPortfolio() {
       <td class="rank">${rank ?? '–'}</td>
       <td><div class="iname">${esc(i.name)}</div><div class="iname-sub"><span class="code">${esc(i.code)}</span><span>${esc(i.area)}</span>${depChip(i, ranks)}${exampleChip(i)}</div></td>
       <td>${methodChip(i.method)}</td>
-      <td><span class="small">${esc(i.stage)}</span></td>
-      <td>${healthChip(i.health)}</td>
+      <td data-noopen>${S.canWrite ? `<select class="cellsel" data-inline="stage" data-id="${esc(i.id)}" aria-label="Etapa de ${esc(i.code)}">${opt(STAGES.map(x => [x, x]), i.stage)}</select>` : `<span class="small">${esc(i.stage)}</span>`}</td>
+      <td data-noopen>${S.canWrite ? `<label class="cellchip chip h-${esc(i.health || 'en_curso')}"><span class="dot"></span><select class="cellsel bare" data-inline="health" data-id="${esc(i.id)}" aria-label="Salud de ${esc(i.code)}">${opt(Object.entries(HEALTH), i.health || 'en_curso')}</select></label>` : healthChip(i.health)}</td>
       <td class="small num">${fmtMonY(i.start)} – ${fmtMonY(i.end)}</td>
       <td><div class="roles" title="PO · PM · PMO">${['po', 'pm', 'pmo'].map(r => i[r] ? person(i[r]) : '').join('') || '<span class="small muted">—</span>'}</div></td>
       <td>${consensusChip(c)}</td>
@@ -786,7 +851,7 @@ function viewPortfolio() {
   if (unscored.length) { rows += `<tr class="capline"><td colspan="10"><div class="capline-inner" style="background:var(--surface-2);color:var(--muted)">Sin puntaje todavía · ${unscored.length}</div></td></tr>`; unscored.forEach(x => rows += row(x, null)); }
   if (closed.length) { rows += `<tr class="capline"><td colspan="10"><div class="capline-inner" style="background:var(--surface-2);color:var(--muted)">Cerradas · ${closed.length}</div></td></tr>`; closed.forEach(x => rows += row(x, null)); }
   if (!list.length) rows = `<tr><td colspan="10" class="muted" style="padding:28px;text-align:center">Ninguna iniciativa coincide con el filtro.</td></tr>`;
-  return `<div class="summary"><span><b>${S.inits.length}</b>iniciativas</span><span><b>${ranked.length}</b>con puntaje</span><span><b>${nAgr}</b>acordadas por comité</span><span><b>${nDis}</b>requieren conversar</span><span><b>${pending}</b>pendientes de tu evaluación</span></div>
+  return `${focusPanel()}<div class="summary"><span><b>${S.inits.length}</b>iniciativas</span><span><b>${ranked.length}</b>con puntaje</span><span><b>${nAgr}</b>acordadas por comité</span><span><b>${nDis}</b>requieren conversar</span><span><b>${pending}</b>pendientes de tu evaluación</span></div>
   ${filtersBar(hasEx && S.canWrite ? `<button class="btn ghost" type="button" data-action="remove-examples">${S.confirmDel === 'examples' ? 'Confirmar: quitar ejemplos' : 'Quitar ejemplos'}</button>` : '')}
   <div class="tbl-wrap"><table class="pf"><thead><tr><th>#</th><th>Iniciativa</th><th>Método</th><th>Etapa</th><th>Salud</th><th>Período</th><th>PO · PM · PMO</th><th>Evaluación</th><th title="Índice de prioridad = valor ponderado ÷ esfuerzo × 10">IP</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
   <p class="small muted" style="margin-top:10px">IP = valor ponderado (1–5) ÷ esfuerzo (1–5) × 10. Ordena por IP; el puntaje acordado por el comité reemplaza el promedio de evaluadores.</p>`;
@@ -816,9 +881,9 @@ function viewRoadmap() {
       else {
         const l = pos(s), w = Math.max(pos(e + 86400000) - l, 2.5);
         const iss = allDepIssues(i, ranks);
-        track = `<div class="rm-bar h-${esc(i.health)} ${i.method === 'waterfall' ? 'waterfall' : ''}" data-bar="${esc(i.id)}" style="left:${l}%;width:${w}%;color:var(--${i.health === 'fuera' ? 'bad' : i.health === 'en_riesgo' ? 'warn' : 'ok'})" data-action="open-init" data-id="${esc(i.id)}" data-tab="${iss.length ? 'dependencias' : 'resumen'}" title="${esc(i.name)} · ${Math.round(prog * 100)}% de ítems hechos${iss.length ? ' · ' + esc(iss.map(x => x.t).join(' · ')) : ''}"><span class="prog" style="width:${prog * 100}%"></span><span class="sdot" aria-hidden="true"></span><span style="position:relative;color:var(--fg)">${s < y0 ? '← ' : ''}${iss.length ? '<b style="color:var(--bad)">⚠</b> ' : ''}${esc(i.code)} · ${Math.round(prog * 100)}%${e >= y1 ? ' →' : ''}</span></div>`;
+        track = `<div class="rm-bar h-${esc(i.health)} ${i.method === 'waterfall' ? 'waterfall' : ''}" tabindex="0" role="button" data-tip="bar:${esc(i.id)}" data-bar="${esc(i.id)}" style="left:${l}%;width:${w}%;color:var(--${i.health === 'fuera' ? 'bad' : i.health === 'en_riesgo' ? 'warn' : 'ok'})" data-action="open-init" data-id="${esc(i.id)}" data-tab="${iss.length ? 'dependencias' : 'resumen'}" aria-label="${esc(i.code)} ${esc(i.name)}, ${Math.round(prog * 100)}% de ítems hechos"><span class="prog" style="width:${prog * 100}%"></span><span class="sdot" aria-hidden="true"></span><span style="position:relative;color:var(--fg)">${s < y0 ? '← ' : ''}${iss.length ? '<b style="color:var(--bad)">⚠</b> ' : ''}${esc(i.code)} · ${Math.round(prog * 100)}%${e >= y1 ? ' →' : ''}</span></div>`;
         S.items.filter(t => t.initiativeId === i.id && t.type === 'hito' && parseD(t.due) != null && parseD(t.due) >= y0 && parseD(t.due) < y1).forEach(m => {
-          track += `<span class="rm-ms ${m.status === 'done' ? 'done' : ''}" style="left:${pos(parseD(m.due))}%" data-action="open-item" data-id="${esc(m.id)}" title="Hito: ${esc(m.title)} · ${fmtD(m.due)}"></span>`;
+          track += `<span class="rm-ms ${m.status === 'done' ? 'done' : ''}" style="left:${pos(parseD(m.due))}%" tabindex="0" role="button" data-tip="ms:${esc(m.id)}" data-action="open-item" data-id="${esc(m.id)}" aria-label="Hito: ${esc(m.title)} · ${fmtD(m.due)}"></span>`;
         });
       }
       body += `<div class="rm-row"><div class="rm-label" data-action="open-init" data-id="${esc(i.id)}"><div class="iname">${esc(i.name)}</div><div class="iname-sub"><span class="code">${esc(i.code)}</span>${methodChip(i.method)}${i.po ? person(i.po) : ''}</div></div><div class="rm-track">${track}</div></div>`;
@@ -843,7 +908,8 @@ function drawDepLinks() {
     const A = a.getBoundingClientRect(), B = b.getBoundingClientRect(); const bad = depIssues(i, d, ranks).length > 0;
     const x1 = A.right - R.left, y1 = A.top + A.height / 2 - R.top, x2 = B.left - R.left - 2, y2 = B.top + B.height / 2 - R.top;
     const dx = Math.max(30, Math.abs(x2 - x1) / 2);
-    out += `<path d="M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}" fill="none" stroke="${bad ? 'var(--bad)' : 'var(--muted)'}" stroke-width="1.6" ${bad ? 'stroke-dasharray="5 4"' : ''} marker-end="url(#${bad ? 'ahb' : 'ah'})"/>`;
+    const dd = `M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+    out += `<path d="${dd}" fill="none" stroke="${bad ? 'var(--bad)' : 'var(--muted)'}" stroke-width="1.6" ${bad ? 'stroke-dasharray="5 4"' : ''} marker-end="url(#${bad ? 'ahb' : 'ah'})"/><path class="dep-hit" d="${dd}" fill="none" stroke="transparent" stroke-width="14" pointer-events="stroke" data-tip="dep:${esc(i.id)}:${esc(d.id)}"/>`;
   }));
   svg.innerHTML = out;
 }
@@ -1428,8 +1494,57 @@ Responde solo JSON: {"health":"en_curso","text":"Avance: ...\\nRiesgos: ...\\nPr
   } catch (e) { S.ai.updBusy = false; renderDrawer(); toast(aiErr(e)); }
 }
 
+/* ---------- Tooltips del roadmap (Popover API; posición calculada en JS como respaldo universal) ---------- */
+function tipHtml(key) {
+  const [k, a, b] = key.split(':'); const ranks = rankMap();
+  if (k === 'bar') {
+    const i = initById(a); if (!i) return '';
+    const its = S.items.filter(t => t.initiativeId === i.id && t.type !== 'epica'); const done = its.filter(t => t.status === 'done').length;
+    const iss = allDepIssues(i, ranks); const deps = depsOf(i).map(d => initById(d.id).code); const blocks = dependents(i).map(x => x.code);
+    return `<div class="tip-h"><span class="code">${esc(i.code)}</span>${healthChip(i.health)}</div><div class="tip-t">${esc(i.name)}</div>
+      <div class="tip-g"><span>Período</span><b class="num">${fmtMonY(i.start)} – ${fmtMonY(i.end)}</b><span>Método</span><b>${METHODS[i.method] || '—'}</b><span>Ítems hechos</span><b class="num">${done}/${its.length}</b>${deps.length ? `<span>Depende de</span><b>${esc(deps.join(', '))}</b>` : ''}${blocks.length ? `<span>Bloquea a</span><b>${esc(blocks.join(', '))}</b>` : ''}</div>
+      ${iss.length ? `<div class="tip-iss">${iss.map(x => `<div><span class="sh sq"></span>${esc(x.t)}</div>`).join('')}</div>` : ''}<div class="tip-f">Enter o clic para abrir</div>`;
+  }
+  if (k === 'ms') { const m = S.items.find(t => t.id === a); if (!m) return ''; const i = initById(m.initiativeId); return `<div class="tip-h"><span class="code">${esc(i ? i.code : '')}</span><span class="chip outline">Hito</span></div><div class="tip-t">${esc(m.title)}</div><div class="tip-g"><span>Fecha</span><b class="num">${fmtD(m.due)}</b><span>Estado</span><b>${STATUS_LABEL[m.status] || ''}</b></div>`; }
+  if (k === 'dep') {
+    const i = initById(a), p = initById(b); if (!i || !p) return ''; const d = depsOf(i).find(x => x.id === b); const iss = depIssues(i, d, ranks);
+    return `<div class="tip-h"><span class="code">${esc(p.code)} → ${esc(i.code)}</span><span class="chip outline">${DEP_KINDS[d.kind] || DEP_KINDS['fin-inicio']}</span></div><div class="tip-t">${esc(i.name)} depende de ${esc(p.name)}</div>${d.note ? `<div class="small muted">${esc(d.note)}</div>` : ''}
+      ${iss.length ? `<div class="tip-iss">${iss.map(x => `<div><span class="sh sq"></span>${esc(x.t)}</div>`).join('')}</div>` : '<div class="small" style="color:var(--ok);margin-top:6px"><span class="sh" style="border-radius:50%;width:7px"></span>Sin conflicto</div>'}`;
+  }
+  return '';
+}
+let tipKey = null;
+function showTip(el) {
+  const key = el.dataset.tip; const tip = $('#tip'); const html = tipHtml(key); if (!html) return;
+  tipKey = key; tip.innerHTML = html;
+  try { if (tip.showPopover && !tip.matches(':popover-open')) tip.showPopover(); } catch (e) {}
+  tip.classList.add('on');
+  const r = el.getBoundingClientRect(); const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = (el.classList.contains('dep-hit') && tip._mx != null) ? tip._mx - tw / 2 : r.left + Math.min(r.width, 240) / 2 - tw / 2;
+  let y = (el.classList.contains('dep-hit') && tip._my != null) ? tip._my + 14 : r.bottom + 8;
+  if (y + th > innerHeight - 8) y = r.top - th - 8;
+  x = clamp(x, 8, innerWidth - tw - 8);
+  tip.style.left = x + 'px'; tip.style.top = Math.max(8, y) + 'px';
+}
+function hideTip() { const tip = $('#tip'); tipKey = null; tip.classList.remove('on'); try { if (tip.hidePopover && tip.matches(':popover-open')) tip.hidePopover(); } catch (e) {} }
+document.addEventListener('pointerover', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (!el) return; const tip = $('#tip'); tip._mx = e.clientX; tip._my = e.clientY; if (el.dataset.tip !== tipKey) showTip(el); });
+document.addEventListener('pointerout', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el && !(e.relatedTarget && el.contains(e.relatedTarget))) hideTip(); });
+document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el) { const tip = $('#tip'); tip._mx = tip._my = null; showTip(el); } });
+document.addEventListener('focusout', e => { if (e.target.closest && e.target.closest('[data-tip]')) hideTip(); });
+addEventListener('scroll', hideTip, true);
+
+/* ---------- Transición tarjeta → detalle (View Transitions, misma página; se omite con movimiento reducido) ---------- */
+function withVT(src, fn, targetSel) {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!document.startViewTransition || reduce || !src) { fn(); return; }
+  src.style.viewTransitionName = 'peek';
+  const t = document.startViewTransition(() => { src.style.viewTransitionName = ''; fn(); const tg = $(targetSel); if (tg) tg.style.viewTransitionName = 'peek'; });
+  t.finished.finally(() => { const tg = $(targetSel); if (tg) tg.style.viewTransitionName = ''; });
+}
+
 /* ---------- Eventos ---------- */
 document.addEventListener('click', e => {
+  if (e.target.closest('[data-noopen] select, [data-noopen] label')) return;
   const opt = e.target.closest('.pick-opt');
   if (opt) { const pk = opt.closest('.picker'); const inp = pk.querySelector('input:not([type=hidden])'); pk.querySelector('input[type=hidden]').value = opt.dataset.ref; inp.value = opt.dataset.name; inp.dataset.touched = '1'; delete inp.dataset.uidInput; pk.querySelector('.pick-menu').hidden = true; if ($('#drawer').contains(pk)) S.drawerDirty = true; return; }
   const pal = e.target.closest('[data-pal]'); if (pal) { runPal(+pal.dataset.pal); return; }
@@ -1449,7 +1564,8 @@ document.addEventListener('click', e => {
     case 'save-method': saveMethod(); break;
     case 'modal-close': closeModal(); break;
     case 'new-item': e.stopPropagation(); openItem(null, { status: a.dataset.status, init: a.dataset.init, parent: a.dataset.parent, type: a.dataset.type }); break;
-    case 'open-item': openItem(id); break;
+    case 'open-item': hideTip(); if (a.classList.contains('card')) withVT(a, () => openItem(id), '#modal .modal-card'); else openItem(id); break;
+    case 'role': S.role = a.dataset.r; try { localStorage.setItem('pd27.role', S.role); } catch (er) {} render(); break;
     case 'save-item': saveItem(); break;
     case 'delete-item': deleteItem(); break;
     case 'save-init': saveInit(); break;
@@ -1496,6 +1612,8 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
+  if (t.id === 'f-mine') { S.mineOnly = t.checked; try { localStorage.setItem('pd27.mine', t.checked ? '1' : '0'); } catch (er) {} render(); return; }
+  if (t.dataset.inline && t.dataset.id) { const f = t.dataset.inline; const i = initById(t.dataset.id); if (i && guardWrite()) write(db.doc('initiatives/' + i.id).update({ [f]: t.value, updatedAt: Date.now() }), `${i.code}: ${f === 'stage' ? 'etapa' : 'salud'} actualizada`); return; }
   if (t.id === 'f-area') { S.fArea = t.value; render(); }
   else if (t.id === 'f-method') { S.fMethod = t.value; render(); }
   else if (t.id === 'b-init') { S.boardInit = t.value; try { localStorage.setItem('pd27.board', t.value); } catch (er) {} render(); }
