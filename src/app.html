@@ -610,10 +610,26 @@ function showLogin(sb, msg) {
   $('#main').innerHTML = `<div class="empty" style="max-width:520px;margin:8vh auto 0;text-align:left;align-items:stretch"><div class="eyebrow">IACC · Vicerrectoría de Ecosistemas Digitales</div><h3 style="font-size:22px">Ingresa al Portafolio Digital 2027</h3><p>Te enviaremos un enlace de acceso a tu correo institucional. No necesitas contraseña.</p>
     <form id="login" class="stack" style="gap:10px"><div class="fld"><label for="l-email">Correo</label><input id="l-email" type="email" class="inp" required autocomplete="email" placeholder="nombre@iacc.cl"></div>
     <button class="btn pri" type="submit" style="align-self:flex-start">Enviar enlace de acceso</button><p class="small muted" id="l-msg" style="margin:0">${esc(msg || '')}</p></form></div>`;
+  // El envío de correos de Supabase tiene un tope por proyecto: cada clic repetido consume cupo de todos, por eso hay espera entre envíos.
+  const KEY = 'pd-login-next', btn = $('#login button'), m = $('#l-msg');
+  const nextAt = () => { try { return +localStorage.getItem(KEY) || 0; } catch { return 0; } };
+  let timer;
+  const lock = (until, base) => {
+    try { localStorage.setItem(KEY, String(until)); } catch {}
+    clearInterval(timer);
+    const tick = () => { const s = Math.ceil((until - Date.now()) / 1000); if (s <= 0) { clearInterval(timer); btn.disabled = false; btn.textContent = 'Enviar enlace de acceso'; return; } btn.disabled = true; btn.textContent = `Reenviar en ${s} s`; };
+    tick(); timer = setInterval(tick, 1000); if (base) m.textContent = base;
+  };
+  if (nextAt() > Date.now()) lock(nextAt());
   $('#login').addEventListener('submit', async e => {
-    e.preventDefault(); const email = $('#l-email').value.trim(); const m = $('#l-msg'); m.textContent = 'Enviando…';
+    e.preventDefault(); if (btn.disabled) return;
+    const email = $('#l-email').value.trim(); btn.disabled = true; m.textContent = 'Enviando…';
     const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname } });
-    m.textContent = error ? 'No se pudo enviar el enlace: ' + error.message : 'Listo. Revisa tu correo y abre el enlace desde este mismo navegador.';
+    if (!error) return lock(Date.now() + 60e3, 'Listo. Revisa tu correo (también la carpeta de spam) y abre el enlace. Si ya recibiste uno hace poco, ese sigue sirviendo.');
+    const wait = /after (\d+) seconds?/i.exec(error.message || '');
+    if (wait) return lock(Date.now() + (+wait[1]) * 1e3, 'Ya enviamos un enlace a este correo hace un momento. Revisa tu bandeja antes de pedir otro.');
+    if (error.status === 429 || /rate limit/i.test(error.message || '')) return lock(Date.now() + 5 * 60e3, 'Se alcanzó el límite de correos de acceso por ahora. Si ya recibiste un enlace, úsalo; si no, intenta de nuevo en unos minutos o avisa a la administración del portafolio.');
+    clearInterval(timer); btn.disabled = false; btn.textContent = 'Enviar enlace de acceso'; m.textContent = 'No se pudo enviar el enlace: ' + error.message;
   });
 }
 async function connectSupabase(cfg) {
