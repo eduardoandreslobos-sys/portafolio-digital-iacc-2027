@@ -409,7 +409,60 @@ tr.capline td{padding:0;border-bottom:0}
   .drawer{animation:slide .18s ease-out}
   @keyframes slide{from{transform:translateX(24px)}to{transform:none}}
 }
-/* Indicadores */
+/* Indicadores v2 */
+.lx-hero{display:grid;grid-template-columns:minmax(260px,.8fr) 1.6fr;gap:16px;margin-bottom:14px}
+.lx-hero-main,.lx-insights,.lx-focus,.lx-field{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.lx-hero-main{padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.lx-big{display:flex;align-items:baseline;gap:6px}.lx-big b{font-size:72px;line-height:.9;font-weight:650;letter-spacing:-.045em}.lx-big span{color:var(--muted);font-size:18px}
+.lx-meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.lx-meter i{display:block;height:100%;border-radius:99px}
+.lx-hero-main p{margin:0;font-size:14px;line-height:1.5}
+.lx-insights{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.lx-insights h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:600}
+.lx-ins{all:unset;box-sizing:border-box;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 14px;border-radius:12px;border:1px solid var(--line);cursor:pointer;transition:background .15s,border-color .15s}
+.lx-ins:hover,.lx-ins:focus-visible{background:var(--accent-soft);border-color:color-mix(in oklch,var(--accent) 35%,var(--line))}
+.lx-ins-n{font-size:34px;font-weight:650;letter-spacing:-.04em;text-align:center}
+.lx-ins.bad .lx-ins-n{color:oklch(55% .17 28)}.lx-ins.warn .lx-ins-n{color:oklch(62% .14 70)}.lx-ins.ok .lx-ins-n{color:oklch(52% .14 145)}
+.lx-ins-t{display:flex;flex-direction:column;gap:2px;font-size:14px;line-height:1.4}.lx-ins-k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.lx-go{font-size:12px;color:var(--muted);white-space:nowrap}
+.lx-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px}
+.lx-chip{all:unset;box-sizing:border-box;display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:8px;row-gap:6px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.lx-chip[aria-pressed="true"]{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
+.lx-chip-n{font-size:10.5px;color:var(--muted);font-family:var(--mono,ui-monospace,monospace)}.lx-chip-t{font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lx-chip-s{font-size:13px;font-weight:650}
+.lx-chip-b{grid-column:1/-1;height:4px;border-radius:99px;background:var(--line);overflow:hidden}.lx-chip-b i{display:block;height:100%;background:var(--muted)}
+.lx-chip.ok .lx-chip-b i,.lx-meter i.ok,.lx-bullet i.ok,.lx-row-b i.ok{background:oklch(60% .14 145)}
+.lx-chip.warn .lx-chip-b i,.lx-meter i.warn,.lx-bullet i.warn,.lx-row-b i.warn{background:oklch(72% .14 75)}
+.lx-chip.bad .lx-chip-b i,.lx-meter i.bad,.lx-bullet i.bad,.lx-row-b i.bad{background:oklch(60% .17 28)}
+.lx-focus{display:grid;grid-template-columns:1.05fr 1fr;gap:28px;padding:24px 26px;margin-bottom:14px}
+.lx-focus h2{font-size:22px;line-height:1.25;letter-spacing:-.02em;margin:6px 0 10px;font-weight:620;text-wrap:balance}
+.lx-focus-num{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}.lx-focus-num b{font-size:48px;font-weight:650;letter-spacing:-.04em;line-height:1}.lx-focus-num span{color:var(--muted);font-size:13px}
+.lx-kpis{display:flex;flex-direction:column}.lx-kpi{border-top:1px solid var(--line);padding:10px 0}
+.lx-kpi-h{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}.lx-kpi-h b{font-weight:650;white-space:nowrap}.lx-kpi.off .lx-kpi-h b{color:var(--muted);font-weight:500;font-style:italic}
+.lx-bullet{position:relative;height:6px;border-radius:99px;background:var(--line);margin-top:8px}.lx-bullet i{display:block;height:100%;border-radius:99px}
+.lx-bullet em{position:absolute;top:-3px;width:2px;height:12px;background:var(--fg);opacity:.5}
+.lx-ctx{font-size:12px;color:var(--muted);margin-top:4px}
+.lx-how{margin-top:12px;font-size:12.5px}.lx-how summary{cursor:pointer;color:var(--accent);font-weight:550}
+.lx-how div{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--line);line-height:1.4}
+.lx-focus-rh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.lx-row{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:minmax(0,1fr) 38% 34px;gap:12px;align-items:center;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:13px}
+.lx-row:hover,.lx-row:focus-visible{background:var(--surface-2)}
+.lx-row.worst{background:color-mix(in oklch,oklch(60% .17 28) 10%,var(--surface));box-shadow:0 0 0 1px color-mix(in oklch,oklch(60% .17 28) 35%,transparent) inset}
+.lx-row-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lx-row-t .code{margin-right:6px}
+.lx-row-b{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.lx-row-b i{display:block;height:100%;border-radius:99px}
+.lx-row b{text-align:right;font-weight:650}
+.lx-field{padding:18px 20px}.lx-field-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}.lx-field h2{font-size:16px;margin:0 0 2px}
+.lx-3d{position:relative;height:460px;border-radius:12px;overflow:hidden;background:radial-gradient(120% 100% at 50% 10%,var(--surface) 0%,color-mix(in oklch,var(--line) 40%,var(--surface)) 100%)}
+.lx-3d canvas{display:block;touch-action:none}.lx-hint{position:absolute;left:12px;bottom:10px;font-size:11.5px;color:var(--muted)}
+.lx-table{overflow-x:auto}.lx-table[hidden]{display:none}
+.lx-table table{border-collapse:separate;border-spacing:3px;width:100%;font-size:12px}
+.lx-table th{font-weight:550;color:var(--muted);text-align:left;white-space:nowrap;padding:4px 6px}.lx-table th.sel{color:var(--fg)}
+.lx-table td{padding:0}.lx-table td button{all:unset;box-sizing:border-box;display:block;width:100%;min-width:46px;text-align:center;padding:8px 4px;border-radius:6px;font-weight:600;cursor:pointer}
+.lx-table td.ok button{background:color-mix(in oklch,oklch(60% .14 145) 22%,var(--surface))}.lx-table td.warn button{background:color-mix(in oklch,oklch(72% .14 75) 26%,var(--surface))}.lx-table td.bad button{background:color-mix(in oklch,oklch(60% .17 28) 24%,var(--surface))}.lx-table td.none button{color:var(--muted);background:var(--surface-2)}
+.lx-table td.sel button{box-shadow:0 0 0 1.5px var(--fg) inset}
+.lx-foot{margin:14px 2px 0;line-height:1.5}
+@media (max-width:1100px){.lx-strip{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:860px){.lx-hero,.lx-focus{grid-template-columns:1fr}.lx-strip{grid-template-columns:repeat(2,1fr)}.lx-3d{height:340px}}
+
+/* Indicadores (anexo) */
 .ind-hero{display:grid;grid-template-columns:minmax(260px,1fr) minmax(300px,1.35fr);gap:20px;align-items:stretch;margin-bottom:18px}
 .ind-hero-l{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
 .ind-big{position:relative;width:126px;height:126px}
@@ -853,7 +906,7 @@ function renderNav() {
 /* ---------- Indicadores: 12 dimensiones de control del portafolio (catálogo nov-2026) ---------- */
 const GSAP_JS = 'https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js';
 const THREE_JS = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
-const IND = { lib: null, three: null, fx: null, animated: false, open: null };
+const IND = { lib: null, field: null, animated: false, open: null, dim: null, lastDim: null, mode: '3d', how: false, model: null };
 function indMedian(xs) { if (!xs.length) return null; const s = [...xs].sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
 function indCtx() {
   const act = S.inits.filter(i => i.stage !== 'Cerrada');
@@ -949,32 +1002,83 @@ function indEval() {
   });
 }
 const indTone = s => s == null ? 'none' : s >= 0.75 ? 'ok' : s >= 0.5 ? 'warn' : 'bad';
+/* ---------- Indicadores v2: lectura del comité (insight primero, foco por dimensión, mapa 3D) ---------- */
+const DIM_ABBR = { alineacion: 'Alineación', valor: 'Valor', finanzas: 'Finanzas', riesgo: 'Riesgo', capacidad: 'Capacidad', flujo: 'Flujo', calidad: 'Calidad', experiencia: 'Experiencia', equipo: 'Equipo', dependencias: 'Depend.', gobierno: 'Gobierno', ia: 'IA' };
+function indPerInit(x) {
+  const out = new Map(); const now = Date.now();
+  x.act.forEach(i => {
+    const m = i.metrics || {}; const c = x.cons.get(i.id); const n = (k) => m[k] != null && m[k] !== '' && isFinite(+m[k]);
+    const av = a => { const v = a.filter(z => z != null && isFinite(z)); return v.length ? avg(v) : null; };
+    const src = c.agreedSet ? i.agreed : c.mean; const its = x.its.filter(t => t.initiativeId === i.id); const open = its.filter(t => t.status !== 'done');
+    const krs = (i.krs || []).map(k => { const b = +k.baseline, t = +k.target, cu = +k.current; return (t - b) !== 0 && isFinite(b) && isFinite(t) && isFinite(cu) ? clamp((cu - b) / (t - b), 0, 1) : null; });
+    const deps = depsOf(i); const bad = deps.filter(d => depIssues(i, d, x.rk).length).length;
+    const ups = S.updates.filter(u => u.initiativeId === i.id).map(u => u.at || 0); const age = ups.length ? (now - Math.max(...ups)) / 864e5 : null;
+    const ag = its.filter(t => refKind(t.assignee) === 'a');
+    const r = {
+      alineacion: av([(i.krs || []).length ? 1 : 0, src && isFinite(+src.estrategia) ? (+src.estrategia - 1) / 4 : null]),
+      valor: av(krs),
+      finanzas: n('gastoReal') && n('presupuestoFecha') && +m.presupuestoFecha ? (v => Math.abs(v) <= .05 ? 1 : Math.max(0, 1 - Math.abs(v) * 2))((m.gastoReal - m.presupuestoFecha) / m.presupuestoFecha) : null,
+      riesgo: av([{ en_curso: 1, en_riesgo: .5, fuera: 0 }[i.health || 'en_curso'], m.usaIA === 'si' ? (m.evaluacionImpacto === 'si' ? 1 : .2) : null]),
+      capacidad: x.cap && x.rk[i.id] ? (x.rk[i.id] <= x.cap ? 1 : .3) : null,
+      flujo: open.length ? 1 - open.filter(t => t.blocked).length / open.length : null,
+      calidad: av([n('despliegues') && +m.despliegues ? Math.max(0, 1 - (+m.desplieguesFallidos || 0) / m.despliegues * 4) : null, n('sloReal') && n('sloObjetivo') ? (+m.sloReal >= +m.sloObjetivo ? 1 : .3) : null]),
+      experiencia: av([n('csat') ? (+m.csat - 1) / 4 : null, n('retencion') ? +m.retencion / 100 : null, n('adopcion') ? clamp(+m.adopcion / 100, 0, 1) : null]),
+      equipo: av([n('dxi') ? +m.dxi / 100 : null, n('enps') ? (+m.enps + 100) / 200 : null]),
+      dependencias: deps.length ? 1 - bad / deps.length : null,
+      gobierno: av([i.stage !== 'Idea' ? (decisionsFor(i.id).some(d => d.status !== 'revocada') ? 1 : 0) : null, age == null ? null : age <= 14 ? 1 : Math.max(0, 1 - (age - 14) / 30)]),
+      ia: av([m.usaIA === 'si' ? (m.evaluacionImpacto === 'si' ? 1 : 0) : null, ag.length ? ag.filter(t => t.dri).length / ag.length : null, ag.length ? 1 - ag.filter(t => t.aiDraft).length / ag.length : null])
+    };
+    out.set(i.id, r);
+  });
+  return out;
+}
+function indModel() {
+  const x = indCtx(); const dims = indEval(); const per = indPerInit(x);
+  dims.forEach(d => {
+    const list = x.act.map(i => ({ i, s: per.get(i.id)[d.k] })).filter(z => z.s != null).sort((a, b) => a.s - b.s);
+    d.byInit = list; d.worst = list[0] || null;
+    const scored = d.rows.filter(r => r.s != null).sort((a, b) => a.s - b.s); d.worstKpi = scored[0] || d.rows.find(r => r.r) || null;
+    const sc = d.score == null ? null : Math.round(d.score * 100);
+    d.headline = sc == null ? `${d.t}: todavía sin datos para medir.` :
+      `${d.t} en ${sc}/100${d.worstKpi ? ` — ${d.worstKpi.n.charAt(0).toLowerCase() + d.worstKpi.n.slice(1)}: ${d.worstKpi.txt}` : ''}.${d.worst && d.worst.s < .75 ? ` Lo más débil: ${d.worst.i.code} · ${d.worst.i.name}.` : ''}`;
+  });
+  const scored = dims.filter(d => d.score != null);
+  const overall = scored.length ? avg(scored.map(d => d.score)) : null;
+  return { x, dims, per, overall, weak: [...scored].sort((a, b) => a.score - b.score), strong: [...scored].sort((a, b) => b.score - a.score) };
+}
 function viewIndicators() {
   if (!S.inits.length) return emptyInits();
-  const dims = indEval(); const sc = dims.map(d => d.score).filter(s => s != null);
-  const overall = sc.length ? avg(sc) : null; const liveDims = dims.filter(d => d.score != null || d.live).length;
-  const gap = dims.filter(d => !d.live).map(d => d.t);
-  const ring = (s, big) => { const r = big ? 54 : 26, c = 2 * Math.PI * r, w = big ? 9 : 5, sz = (r + w) * 2; return `<svg class="ind-ring ${indTone(s)}" viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true"><circle cx="${sz / 2}" cy="${sz / 2}" r="${r}" class="trk" stroke-width="${w}"/><circle cx="${sz / 2}" cy="${sz / 2}" r="${r}" class="val" stroke-width="${w}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c * (1 - (s || 0))).toFixed(1)}" data-full="${c.toFixed(1)}" data-s="${s == null ? '' : s}" transform="rotate(-90 ${sz / 2} ${sz / 2})"/></svg>`; };
-  const cards = dims.map((d, i) => `<article class="ind-card ${indTone(d.score)}${IND.open === d.k ? ' open' : ''}" id="ind-${d.k}" data-dim="${i}">
-      <button type="button" class="ind-head" data-action="ind-toggle" data-k="${d.k}" aria-expanded="${IND.open === d.k}">
-        <span class="ind-gauge">${ring(d.score)}<b class="num" data-count="${d.score == null ? '' : Math.round(d.score * 100)}">${d.score == null ? '—' : Math.round(d.score * 100)}</b></span>
-        <span class="ind-tt"><span class="ind-n">${String(i + 1).padStart(2, '0')}</span><span class="ind-t">${esc(d.t)}</span><span class="ind-d">${esc(d.d)}</span></span>
-        <span class="ind-live">${d.live}/${d.kpis.length} en vivo</span>
-      </button>
-      <ul class="ind-kpis">${d.rows.map(r => `<li class="${r.r ? 'on' : 'off'}"><div class="kn"><span>${esc(r.n)}</span><span class="kv num">${r.r ? esc(r.txt) : 'sin dato'}</span></div><div class="kd"><span><b>Fórmula</b> ${esc(r.f)}</span><span><b>Referente</b> ${esc(r.src)}</span><span><b>Frecuencia</b> ${esc(r.fr)}</span></div></li>`).join('')}</ul>
-    </article>`).join('');
-  return `<section class="ind-hero"><div class="ind-hero-l"><span class="eyebrow">Salud del portafolio · 12 dimensiones</span>
-      <div class="ind-big">${ring(overall, true)}<span class="hv num" data-count="${overall == null ? '' : Math.round(overall * 100)}">${overall == null ? '—' : Math.round(overall * 100)}</span></div>
-      <p class="ind-sum"><b>${liveDims} de 12</b> dimensiones tienen al menos un indicador en vivo con los datos de la plataforma.${gap.length ? ` Sin dato todavía: ${esc(gap.join(', '))}.` : ''}</p>
-      <p class="small muted">El puntaje de cada dimensión es el promedio de sus indicadores con meta (0 a 100). Los indicadores de contexto se muestran pero no suman.</p></div>
-      <div class="ind-3d" id="ind-3d" aria-label="Constelación de las 12 dimensiones; cada esfera crece y se colorea según su puntaje"><div class="ind-tip" id="ind-tip" hidden></div></div></section>
-    <div class="ind-grid">${cards}</div>
-    <section class="ind-anti"><h2>Lo que no hay que hacer con estos números</h2><div class="ind-anti-g">
-      <div><b>Ley de Goodhart</b><span>Cuando una medida se vuelve meta, deja de ser buena medida. Ningún indicador de flujo o de IA se usa para evaluar personas.</span></div>
-      <div><b>Métricas de vanidad</b><span>Contar entregas, horas o ítems no es valor. Los resultados clave van primero.</span></div>
-      <div><b>% de trabajo hecho por IA como meta</b><span>Es contexto. Faros AI 2026 y LinearB 2026 muestran más retrabajo y revisión cuando se empuja sin control.</span></div>
-      <div><b>Reporte «sandía»</b><span>Verde por fuera, rojo por dentro. La salud se respalda con resultados clave y updates recientes.</span></div>
-    </div><p class="small muted">Catálogo basado en la investigación «KPI de portafolio digital 2026» (4 de noviembre de 2026): PMI, SAFe Measure and Grow, EBM de Scrum.org, OKR, Gartner, TBM Council, FinOps Foundation, DORA, Flow Framework, DX Core 4, Google SRE y HEART, NIST AI RMF e ISO/IEC 42001.</p></section>`;
+  const M = indModel(); IND.model = M;
+  if (!IND.dim || !M.dims.some(d => d.k === IND.dim)) IND.dim = (M.weak[0] || M.dims[0]).k;
+  const D = M.dims.find(d => d.k === IND.dim); const di = M.dims.indexOf(D);
+  const pc = s => s == null ? '—' : Math.round(s * 100);
+  const tone = indTone;
+  const hero = `<section class="lx-hero">
+    <div class="lx-hero-main"><span class="eyebrow">Salud del portafolio</span>
+      <div class="lx-big"><b class="num" data-count="${pc(M.overall)}">${pc(M.overall)}</b><span>/100</span></div>
+      <div class="lx-meter"><i class="${tone(M.overall)}" style="width:${M.overall == null ? 0 : M.overall * 100}%"></i></div>
+      <p>${M.weak.length ? `Lo más débil: <b>${M.weak.slice(0, 2).map(d => `${esc(d.t)} (${pc(d.score)})`).join(' y ')}</b>. Lo más sólido: <b>${esc(M.strong[0].t)} (${pc(M.strong[0].score)})</b>.` : 'Agrega datos a las iniciativas para ver la salud.'}</p>
+      <p class="small muted">${M.x.act.length} iniciativas activas · ${M.dims.filter(d => d.live).length} de 12 dimensiones con datos en vivo</p></div>
+    <div class="lx-insights"><h2>Lo que el comité debe saber hoy</h2>
+      ${M.weak.slice(0, 3).map((d, k) => `<button type="button" class="lx-ins ${tone(d.score)}" data-action="ind-dim" data-k="${d.k}"><span class="lx-ins-n num" data-count="${pc(d.score)}">${pc(d.score)}</span><span class="lx-ins-t"><span class="lx-ins-k">${k + 1} · ${esc(d.t)}</span><span>${esc(d.headline.replace(/^.+? — /, '').replace(/^./, c => c.toUpperCase()))}</span></span><span class="lx-go">Ver →</span></button>`).join('')}</div></section>`;
+  const strip = `<nav class="lx-strip" aria-label="Dimensiones">${M.dims.map((d, k) => `<button type="button" class="lx-chip ${tone(d.score)}" data-action="ind-dim" data-k="${d.k}" aria-pressed="${d.k === IND.dim}"><span class="lx-chip-n">${String(k + 1).padStart(2, '0')}</span><span class="lx-chip-t">${esc(d.t)}</span><span class="lx-chip-s num">${pc(d.score)}</span><span class="lx-chip-b"><i style="width:${d.score == null ? 0 : d.score * 100}%"></i></span></button>`).join('')}</nav>`;
+  const kpis = D.rows.map(r => `<div class="lx-kpi ${r.r ? '' : 'off'}"><div class="lx-kpi-h"><span>${esc(r.n)}</span><b class="num">${r.r ? esc(r.txt) : 'sin dato'}</b></div>${r.s != null ? `<div class="lx-bullet"><i class="${tone(r.s)}" style="width:${r.s * 100}%"></i><em style="left:75%" title="Meta de referencia: 75"></em></div>` : `<div class="lx-ctx">${r.r ? 'Indicador de contexto: se muestra, no se evalúa' : 'Registra el dato en la pestaña Indicadores de cada iniciativa'}</div>`}</div>`).join('');
+  const how = `<details class="lx-how"${IND.how ? ' open' : ''}><summary data-action="ind-how">¿Cómo se calcula y quién lo usa?</summary>${D.rows.map(r => `<div><b>${esc(r.n)}</b><span>${esc(r.f)}</span><span class="muted">${esc(r.src)} · ${esc(r.fr)}</span></div>`).join('')}</details>`;
+  const bars = D.byInit.length ? D.byInit.map((z, k) => `<button type="button" class="lx-row ${k === 0 && z.s < .75 ? 'worst' : ''}" data-action="ind-open-init" data-id="${esc(z.i.id)}"><span class="lx-row-t"><span class="code">${esc(z.i.code)}</span>${esc(z.i.name)}</span><span class="lx-row-b"><i class="${tone(z.s)}" style="width:${Math.max(3, z.s * 100)}%"></i></span><b class="num">${pc(z.s)}</b></button>`).join('')
+    : '<p class="muted small">Ninguna iniciativa tiene datos para esta dimensión todavía.</p>';
+  const focus = `<section class="lx-focus" id="lx-focus" data-dim="${D.k}">
+    <div class="lx-focus-l"><span class="eyebrow">Dimensión ${String(di + 1).padStart(2, '0')} · ${esc(D.d)}</span>
+      <h2>${esc(D.headline)}</h2>
+      <div class="lx-focus-num"><b class="num" data-count="${pc(D.score)}">${pc(D.score)}</b><span>/100 · ${D.live} de ${D.kpis.length} indicadores con dato</span></div>
+      <div class="lx-kpis">${kpis}</div>${how}</div>
+    <div class="lx-focus-r"><div class="lx-focus-rh"><span class="eyebrow">Por iniciativa · de la más débil a la más fuerte</span>${D.worst && D.worst.s < .75 ? `<button type="button" class="btn sm" data-action="new-dec" data-init="${esc(D.worst.i.id)}">Registrar decisión sobre ${esc(D.worst.i.code)}</button>` : ''}</div>${bars}</div></section>`;
+  const cells = M.x.act.map(i => `<tr><th scope="row"><span class="code">${esc(i.code)}</span> ${esc(i.name)}</th>${M.dims.map(d => { const s = M.per.get(i.id)[d.k]; return `<td class="${tone(s)}${d.k === IND.dim ? ' sel' : ''}"><button type="button" data-action="ind-dim" data-k="${d.k}" title="${esc(i.code)} · ${esc(d.t)}: ${s == null ? 'sin dato' : pc(s) + '/100'}">${s == null ? '·' : pc(s)}</button></td>`; }).join('')}</tr>`).join('');
+  const field = `<section class="lx-field"><div class="lx-field-h"><div><h2>Mapa del portafolio</h2><p class="small muted">Cada barra es una iniciativa en una dimensión: más alta y más verde es mejor. Lo hundido y rojo es lo que hay que mirar.</p></div>
+      <div class="seg-filter"><button type="button" data-action="ind-mode" data-m="3d" aria-pressed="${IND.mode !== 'tabla'}">3D</button><button type="button" data-action="ind-mode" data-m="tabla" aria-pressed="${IND.mode === 'tabla'}">Tabla</button></div></div>
+    ${IND.mode === 'tabla' ? '' : `<div class="lx-3d" id="lx-3d"><div class="ind-tip" id="ind-tip" hidden></div><span class="lx-hint">Arrastra para girar · pasa el cursor · clic para abrir la dimensión</span></div>`}
+    <div class="lx-table"${IND.mode === 'tabla' ? '' : ' hidden'}><table><thead><tr><th></th>${M.dims.map(d => `<th scope="col" class="${d.k === IND.dim ? 'sel' : ''}">${esc(DIM_ABBR[d.k])}</th>`).join('')}</tr></thead><tbody>${cells}</tbody></table></div></section>`;
+  const foot = `<p class="lx-foot small muted">No uses estos números para evaluar personas (ley de Goodhart). El % de trabajo hecho por IA es contexto, no meta. Catálogo basado en la investigación «KPI de portafolio digital 2026»: PMI, SAFe, EBM, OKR, Gartner, TBM Council, FinOps Foundation, DORA, Flow Framework, DX Core 4, Google SRE y HEART, NIST AI RMF e ISO/IEC 42001.${S.inits.some(i => i.ejemplo) ? ' <b>Las iniciativas de ejemplo tienen datos ficticios.</b>' : ''}</p>`;
+  return hero + strip + focus + field + foot;
 }
 async function indLibs() {
   if (IND.lib) return IND.lib;
@@ -982,63 +1086,70 @@ async function indLibs() {
   return IND.lib;
 }
 async function mountIndicators() {
-  const host = $('#ind-3d'); if (!host) return;
-  const dims = indEval(); const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const { gsap, THREE } = await indLibs();
-  if (!$('#ind-3d')) return;
-  if (gsap && !IND.animated && !reduce) {
-    IND.animated = true;
-    gsap.from('.ind-card', { y: 18, opacity: 0, duration: .55, ease: 'power3.out', stagger: .035, clearProps: 'all' });
-    document.querySelectorAll('.ind-ring .val').forEach(c => { const full = +c.dataset.full, s = c.dataset.s === '' ? 0 : +c.dataset.s; gsap.fromTo(c, { attr: { 'stroke-dashoffset': full } }, { attr: { 'stroke-dashoffset': full * (1 - s) }, duration: 1.2, ease: 'power2.out', delay: .15 }); });
-    document.querySelectorAll('[data-count]').forEach(el => { const v = el.dataset.count; if (v === '') return; const o = { n: 0 }; gsap.to(o, { n: +v, duration: 1.2, ease: 'power2.out', delay: .15, onUpdate: () => { el.textContent = Math.round(o.n); } }); });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const { gsap, THREE } = await indLibs(); if (S.view !== 'indicadores') return;
+  const first = !IND.animated; const dimChanged = IND.lastDim !== IND.dim; IND.animated = true; IND.lastDim = IND.dim;
+  if (gsap && !reduce) {
+    const count = sel => document.querySelectorAll(sel).forEach(el => { const v = el.dataset.count; if (v === '' || v === '—') return; const o = { n: 0 }; gsap.to(o, { n: +v, duration: 1, ease: 'power2.out', onUpdate: () => { el.textContent = Math.round(o.n); } }); });
+    const grow = sel => gsap.from(sel, { width: 0, duration: .8, ease: 'power3.out', stagger: .03 });
+    if (first) {
+      gsap.from('.lx-hero-main, .lx-ins', { y: 14, opacity: 0, duration: .5, stagger: .07, ease: 'power3.out', clearProps: 'transform,opacity' });
+      gsap.from('.lx-chip', { y: 10, opacity: 0, duration: .35, stagger: .025, ease: 'power2.out', clearProps: 'transform,opacity' });
+      count('.lx-big b, .lx-ins-n'); grow('.lx-meter i, .lx-chip-b i');
+    }
+    if (first || dimChanged) {
+      gsap.from('.lx-focus-l > *, .lx-focus-r > *', { y: 10, opacity: 0, duration: .4, stagger: .03, ease: 'power2.out', clearProps: 'transform,opacity' });
+      count('.lx-focus-num b'); grow('.lx-bullet i, .lx-row-b i');
+    }
   }
-  if (!THREE) { host.classList.add('flat'); return; }
-  if (!IND.fx) IND.fx = indScene(THREE, reduce);
-  IND.fx.mount(host); IND.fx.update(dims);
+  const host = $('#lx-3d'); if (!host) return;
+  if (!THREE) { IND.mode = 'tabla'; scheduleRender(); return; }
+  if (!IND.field) IND.field = indField(THREE, gsap, reduce);
+  IND.field.mount(host); IND.field.update(IND.model, IND.dim);
 }
-function indScene(THREE, reduce) {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
-  const scene = new THREE.Scene(); const cam = new THREE.PerspectiveCamera(42, 1, .1, 100); cam.position.set(0, 2.4, 9.4); cam.lookAt(0, 0, 0);
-  scene.add(new THREE.AmbientLight(0xffffff, .55)); const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(4, 6, 5); scene.add(key);
-  const rim = new THREE.PointLight(0x7fc35a, 18, 30); rim.position.set(-5, -2, -4); scene.add(rim);
+function indField(THREE, gsap, reduce) {
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene(); const cam = new THREE.PerspectiveCamera(34, 1, .1, 200);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a9a90, 1.1)); const sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(6, 12, 8); scene.add(sun);
   const world = new THREE.Group(); scene.add(world);
-  const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.05, 3), new THREE.MeshStandardMaterial({ color: 0x1f3b30, roughness: .35, metalness: .2, emissive: 0x2c6b3a, emissiveIntensity: .35, flatShading: true }));
-  world.add(core);
-  const halo = new THREE.Mesh(new THREE.TorusGeometry(3.25, .012, 8, 220), new THREE.MeshBasicMaterial({ color: 0x8fa79a, transparent: true, opacity: .45 })); halo.rotation.x = Math.PI / 2; world.add(halo);
-  const halo2 = halo.clone(); halo2.scale.setScalar(.72); halo2.material = halo.material.clone(); halo2.material.opacity = .22; world.add(halo2);
-  const TONE = { ok: 0x4caf50, warn: 0xe0a43a, bad: 0xd8574a, none: 0x9aa3a6 };
-  const nodes = [], lines = [];
-  for (let i = 0; i < 12; i++) {
-    const a = i / 12 * Math.PI * 2; const g = new THREE.Group(); g.position.set(Math.cos(a) * 3.25, Math.sin(a * 2) * .35, Math.sin(a) * 3.25);
-    const m = new THREE.Mesh(new THREE.SphereGeometry(.3, 32, 24), new THREE.MeshStandardMaterial({ color: TONE.none, roughness: .3, metalness: .1, emissive: TONE.none, emissiveIntensity: .25 }));
-    m.userData.i = i; g.add(m); world.add(g); nodes.push(m);
-    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), g.position.clone()]);
-    const ln = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x8fa79a, transparent: true, opacity: .35 })); world.add(ln); lines.push(ln);
-  }
-  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(-9, -9); let dims = [], host = null, hover = -1, drag = null, rotY = 0, rotX = .12, vel = reduce ? 0 : .0025;
+  const TONE = { ok: 0x3f9b4b, warn: 0xd9a032, bad: 0xcf4a3c, none: 0xc4c9c6 };
   const el = renderer.domElement; el.style.cursor = 'grab';
-  el.addEventListener('pointermove', e => { const b = el.getBoundingClientRect(); ptr.set((e.clientX - b.left) / b.width * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1); if (drag) { rotY += (e.clientX - drag.x) * .006; rotX = clamp(rotX + (e.clientY - drag.y) * .004, -.5, .6); drag = { x: e.clientX, y: e.clientY }; } const tip = $('#ind-tip'); if (tip) { tip.style.left = (e.clientX - b.left + 14) + 'px'; tip.style.top = (e.clientY - b.top + 10) + 'px'; } });
-  el.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, t: Date.now() }; el.setPointerCapture(e.pointerId); el.style.cursor = 'grabbing'; });
-  el.addEventListener('pointerup', e => { const wasClick = drag && Date.now() - drag.t < 250; drag = null; el.style.cursor = 'grab'; if (wasClick && hover >= 0 && dims[hover]) { IND.open = dims[hover].k; scheduleRender(); setTimeout(() => { const c = document.getElementById('ind-' + dims[hover].k); if (c) c.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); }, 160); } });
+  let host = null, bars = [], sig = '', rotY = -.1, rotX = .95, drag = null, hover = null, model = null, cols = 12, rows = 0;
+  const label = (txt, size = 34, color = '#2b3a33', w = 256) => { const c = document.createElement('canvas'); c.width = w; c.height = 64; const g = c.getContext('2d'); g.font = `600 ${size}px Geist, system-ui, sans-serif`; g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, w / 2, 32); const t = new THREE.CanvasTexture(c); t.anisotropy = 4; const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false })); sp.scale.set(w / 64 * .42, .42, 1); return sp; };
+  const build = (M) => {
+    while (world.children.length) { const o = world.children.pop(); o.geometry && o.geometry.dispose(); o.material && (o.material.map && o.material.map.dispose(), o.material.dispose()); }
+    bars = []; rows = M.x.act.length; const gap = 1.05, ox = -(cols - 1) * gap / 2, oz = -(rows - 1) * gap / 2;
+    const base = new THREE.Mesh(new THREE.BoxGeometry(cols * gap + .6, .08, rows * gap + .6), new THREE.MeshStandardMaterial({ color: 0xeef1ed, roughness: .9 })); base.position.y = -.04; world.add(base);
+    const geo = new THREE.BoxGeometry(.72, 1, .72); geo.translate(0, .5, 0);
+    M.x.act.forEach((i, r) => M.dims.forEach((d, c) => {
+      const s = M.per.get(i.id)[d.k];
+      const mat = new THREE.MeshStandardMaterial({ color: TONE[indTone(s)], roughness: .5, metalness: 0 }); mat.userData = { base: new THREE.Color(TONE[indTone(s)]) };
+      const b = new THREE.Mesh(geo, mat); b.position.set(ox + c * gap, 0, oz + r * gap); const h = s == null ? .04 : .12 + s * 1.5; b.userData = { r, c, s, h, i, d }; b.scale.y = h; world.add(b); bars.push(b);
+    }));
+    M.dims.forEach((d, c) => { const sp = label(DIM_ABBR[d.k], 34, '#2b3a33'); sp.scale.multiplyScalar(1.25); sp.position.set(ox + c * gap, .05, oz + (rows - 1) * gap + 1.05); sp.userData.col = c; world.add(sp); });
+    M.x.act.forEach((i, r) => { const sp = label(i.code, 34, '#2b3a33', 192); sp.scale.multiplyScalar(1.25); sp.position.set(ox - 1.55, .05, oz + r * gap); world.add(sp); });
+    const span = Math.max(cols, rows) * gap; cam.position.set(0, span * .55, span * 1.05); cam.lookAt(0, .4, 0);
+    if (gsap && !reduce) bars.forEach((b, k) => { const h = b.userData.h; b.scale.y = .001; gsap.to(b.scale, { y: h, duration: .9, ease: 'power3.out', delay: (b.userData.c + b.userData.r) * .025 }); });
+  };
+  const grey = new THREE.Color(0xd5d9d6); const tint = dimK => bars.forEach(b => { const on = b.userData.d.k === dimK; b.material.color.copy(b.material.userData.base); if (!on) b.material.color.lerp(grey, .55); b.material.emissive = new THREE.Color(on ? 0x1d2a20 : 0x000000); b.material.emissiveIntensity = on ? .25 : 0; });
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(-9, -9);
+  el.addEventListener('pointermove', e => { const b = el.getBoundingClientRect(); ptr.set((e.clientX - b.left) / b.width * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1); if (drag) { rotY += (e.clientX - drag.x) * .006; rotX = clamp(rotX + (e.clientY - drag.y) * .004, .45, 1.35); drag.x = e.clientX; drag.y = e.clientY; } const tip = $('#ind-tip'); if (tip) { tip.style.left = (e.clientX - b.left + 14) + 'px'; tip.style.top = (e.clientY - b.top + 12) + 'px'; } });
+  el.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, t: Date.now() }; el.setPointerCapture(e.pointerId); });
+  el.addEventListener('pointerup', () => { const click = drag && Date.now() - drag.t < 250; drag = null; if (click && hover) { IND.dim = hover.userData.d.k; scheduleRender(); setTimeout(() => { const f = $('#lx-focus'); f && f.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }, 140); } });
   el.addEventListener('pointerleave', () => { ptr.set(-9, -9); });
-  const size = () => { if (!host) return; const w = host.clientWidth || 400, h = host.clientHeight || 360; renderer.setSize(w, h, false); el.style.width = '100%'; el.style.height = '100%'; cam.aspect = w / h; cam.updateProjectionMatrix(); };
+  const size = () => { if (!host) return; const w = host.clientWidth || 600, h = host.clientHeight || 420; renderer.setSize(w, h, false); el.style.width = '100%'; el.style.height = '100%'; cam.aspect = w / h; cam.updateProjectionMatrix(); };
   addEventListener('resize', size);
-  const t0 = performance.now();
   (function loop() {
-    requestAnimationFrame(loop);
-    if (!host || !document.body.contains(el) || document.hidden) return;
-    const t = (performance.now() - t0) / 1000;
-    if (!drag) rotY += vel; world.rotation.y = rotY; world.rotation.x = rotX;
-    core.rotation.y = t * .15; core.rotation.x = t * .07;
-    nodes.forEach((m, i) => { const s = m.userData.target || .6; const k = s + (reduce ? 0 : Math.sin(t * 1.6 + i) * .025); m.scale.lerp(new THREE.Vector3(k, k, k), .08); });
-    ray.setFromCamera(ptr, cam); const hit = ray.intersectObjects(nodes)[0]; const h = hit ? hit.object.userData.i : -1;
-    if (h !== hover) { hover = h; nodes.forEach((m, i) => { m.material.emissiveIntensity = i === h ? .9 : .25; }); const tip = $('#ind-tip'); if (tip) { if (h >= 0 && dims[h]) { const d = dims[h]; tip.innerHTML = `<b>${esc(d.t)}</b><span>${d.score == null ? 'Sin dato en vivo' : Math.round(d.score * 100) + ' / 100'} · ${d.live}/${d.kpis.length} indicadores</span>`; tip.hidden = false; } else tip.hidden = true; } el.style.cursor = h >= 0 ? 'pointer' : (drag ? 'grabbing' : 'grab'); }
+    requestAnimationFrame(loop); if (!host || !document.body.contains(el) || document.hidden) return;
+    world.rotation.y += ((rotY) - world.rotation.y) * .12; world.rotation.x = 0;
+    const r = Math.hypot(cam.position.z, cam.position.y) || 1; const span = Math.max(cols * 1.05 + 3, rows * 1.05 + 3) * 1.32; cam.position.set(0, Math.sin(rotX) * span, Math.cos(rotX) * span); cam.lookAt(0, 0, .3);
+    ray.setFromCamera(ptr, cam); const hit = ray.intersectObjects(bars)[0]; const hb = hit ? hit.object : null;
+    if (hb !== hover) { if (hover) hover.scale.x = hover.scale.z = 1; hover = hb; if (hover) hover.scale.x = hover.scale.z = 1.12; const tip = $('#ind-tip'); if (tip) { if (hover) { const u = hover.userData; tip.innerHTML = `<b>${esc(u.i.code)} · ${esc(u.d.t)}</b><span>${u.s == null ? 'Sin dato' : Math.round(u.s * 100) + ' / 100'}</span><span>${esc(u.i.name)}</span>`; tip.hidden = false; } else tip.hidden = true; } el.style.cursor = hover ? 'pointer' : (drag ? 'grabbing' : 'grab'); }
     renderer.render(scene, cam);
   })();
   return {
     mount(h) { if (host !== h) { host = h; h.appendChild(el); size(); } },
-    update(d) { dims = d; d.forEach((x, i) => { const tone = TONE[indTone(x.score)]; nodes[i].material.color.setHex(tone); nodes[i].material.emissive.setHex(tone); nodes[i].userData.target = x.score == null ? .55 : .7 + x.score * .75; lines[i].material.opacity = x.score == null ? .15 : .25 + x.score * .4; }); }
+    update(M, dimK) { const s = M.x.act.map(i => i.id + M.dims.map(d => M.per.get(i.id)[d.k]).join(',')).join('|'); if (s !== sig) { sig = s; build(M); } tint(dimK); }
   };
 }
 
@@ -1948,6 +2059,10 @@ document.addEventListener('click', e => {
   switch (act) {
     case 'go': go(a.dataset.view); break;
     case 'ind-toggle': IND.open = IND.open === a.dataset.k ? null : a.dataset.k; render(); break;
+    case 'ind-dim': IND.dim = a.dataset.k; render(); break;
+    case 'ind-mode': IND.mode = a.dataset.m; render(); break;
+    case 'ind-how': IND.how = !IND.how; break;
+    case 'ind-open-init': openDrawer(a.dataset.id, 'indicadores'); break;
     case 'palette': openPalette(); break;
     case 'open-init': e.stopPropagation(); openDrawer(id, a.dataset.tab || 'resumen'); break;
     case 'drawer-close': closeDrawer(); break;
