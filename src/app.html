@@ -409,6 +409,48 @@ tr.capline td{padding:0;border-bottom:0}
   .drawer{animation:slide .18s ease-out}
   @keyframes slide{from{transform:translateX(24px)}to{transform:none}}
 }
+/* Indicadores */
+.ind-hero{display:grid;grid-template-columns:minmax(260px,1fr) minmax(300px,1.35fr);gap:20px;align-items:stretch;margin-bottom:18px}
+.ind-hero-l{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+.ind-big{position:relative;width:126px;height:126px}
+.ind-big .hv{position:absolute;inset:0;display:grid;place-items:center;font-size:38px;font-weight:650;letter-spacing:-.03em}
+.ind-sum{margin:0;font-size:14px;line-height:1.5}
+.ind-3d{position:relative;min-height:360px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 90% at 50% 40%,color-mix(in oklch,var(--accent) 14%,var(--surface)) 0%,var(--surface) 60%)}
+.ind-3d canvas{display:block;touch-action:none}
+.ind-3d.flat::after{content:"Vista 3D no disponible en este navegador";position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
+.ind-tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);border-radius:10px;padding:8px 10px;font-size:12px;display:flex;flex-direction:column;gap:2px;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:2;max-width:240px}
+.ind-tip[hidden]{display:none}
+.ind-ring .trk{fill:none;stroke:var(--line)}
+.ind-ring .val{fill:none;stroke-linecap:round;stroke:var(--muted)}
+.ind-ring.ok .val{stroke:oklch(62% .15 145)} .ind-ring.warn .val{stroke:oklch(72% .14 75)} .ind-ring.bad .val{stroke:oklch(60% .17 28)} .ind-ring.none .val{stroke:transparent}
+.ind-big .ind-ring{position:absolute;inset:0;width:100%;height:100%}
+.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.ind-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.ind-card.open{border-color:color-mix(in oklch,var(--accent) 45%,var(--line))}
+.ind-head{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer}
+.ind-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:14px}
+.ind-gauge{position:relative;width:62px;height:62px;display:grid;place-items:center}
+.ind-gauge svg{position:absolute;inset:0}
+.ind-gauge b{font-size:17px;font-weight:650}
+.ind-tt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ind-n{font-size:11px;color:var(--muted);font-family:var(--mono,ui-monospace,monospace)}
+.ind-t{font-weight:600;font-size:15px}
+.ind-d{font-size:12.5px;color:var(--muted);line-height:1.35}
+.ind-live{font-size:11px;color:var(--muted);white-space:nowrap;align-self:start;margin-top:4px}
+.ind-kpis{list-style:none;margin:0;padding:0 16px 12px;display:flex;flex-direction:column}
+.ind-kpis li{border-top:1px solid var(--line);padding:9px 0}
+.ind-kpis .kn{display:flex;justify-content:space-between;gap:12px;font-size:13px}
+.ind-kpis .kv{font-weight:650;white-space:nowrap}
+.ind-kpis li.off .kv{color:var(--muted);font-weight:500;font-style:italic}
+.ind-kpis .kd{display:none;flex-direction:column;gap:3px;margin-top:6px;font-size:12px;color:var(--muted);line-height:1.4}
+.ind-kpis .kd b{color:var(--fg);font-weight:600;margin-right:4px}
+.ind-card.open .ind-kpis .kd{display:flex}
+.ind-anti{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 22px}
+.ind-anti h2{font-size:15px;margin:0 0 12px}
+.ind-anti-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:10px}
+.ind-anti-g div{display:flex;flex-direction:column;gap:4px;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.ind-anti-g b{color:var(--fg);font-size:13px}
+@media (max-width:860px){.ind-hero{grid-template-columns:1fr}.ind-3d{min-height:300px}}
 </style>
 
 <div class="app">
@@ -463,7 +505,8 @@ const ICON = {
   roadmap: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 3.5h7M5 8h8M3 12.5h6"/></svg>',
   tablero: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="3.2" height="11" rx="1"/><rect x="6.4" y="2.5" width="3.2" height="7" rx="1"/><rect x="10.8" y="2.5" width="3.2" height="9" rx="1"/></svg>',
   metricas: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 13.5h12M4 11V8M8 11V4M12 11V6.5"/></svg>',
-  comite: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2.5h8v11H4zM6.5 6h3M6.5 9h3"/><path d="M2.5 4.5h1.5M2.5 11.5h1.5"/></svg>'
+  comite: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2.5h8v11H4zM6.5 6h3M6.5 9h3"/><path d="M2.5 4.5h1.5M2.5 11.5h1.5"/></svg>',
+  indicadores: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><circle cx="8" cy="8" r="5.5" stroke-dasharray="2 2.2"/><circle cx="13.5" cy="8" r="1" fill="currentColor"/><circle cx="4" cy="4.2" r="1" fill="currentColor"/></svg>'
 };
 const DEP_KINDS = { 'fin-inicio': 'Debe terminar antes', parcial: 'Necesita un entregable' };
 const DEC_TYPES = ['Priorización', 'Aprobación', 'Pausa', 'Cancelación', 'Cambio de alcance', 'Asignación de recursos', 'Otro'];
@@ -473,7 +516,8 @@ const VIEWS = [
   { k: 'roadmap', label: 'Roadmap', key: '2', title: 'Roadmap', sub: 'Iniciativas por área sobre el año. Trazo continuo para ágil, discontinuo para cascada; los rombos son hitos.' },
   { k: 'tablero', label: 'Tablero', key: '3', title: 'Tablero de entregables', sub: 'Flujo de entregables, tareas e hitos. El trabajo de agentes IA siempre tiene una persona responsable.' },
   { k: 'metricas', label: 'Métricas', key: '4', title: 'Métricas del portafolio', sub: 'Resultados primero (avance de KR), luego flujo. La actividad de agentes IA se muestra como contexto, no como meta.' },
-  { k: 'comite', label: 'Comité', key: '5', title: 'Decisiones del comité', sub: 'Registro de lo que el comité de portafolio decidió, cuándo, por qué y sobre qué iniciativas. Las decisiones no se borran: se revocan con su motivo.' }
+  { k: 'comite', label: 'Comité', key: '5', title: 'Decisiones del comité', sub: 'Registro de lo que el comité de portafolio decidió, cuándo, por qué y sobre qué iniciativas. Las decisiones no se borran: se revocan con su motivo.' },
+  { k: 'indicadores', label: 'Indicadores', key: '6', title: 'Indicadores del portafolio', sub: '12 dimensiones de control con los indicadores que usan los referentes mundiales a noviembre de 2026. En vivo cuando la plataforma tiene el dato; si no, muestra qué falta registrar.' }
 ];
 
 /* ---------- Estado ---------- */
@@ -806,6 +850,193 @@ function renderNav() {
   else me.innerHTML = '<span class="small">Modo local</span>';
 }
 
+/* ---------- Indicadores: 12 dimensiones de control del portafolio (catálogo nov-2026) ---------- */
+const GSAP_JS = 'https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js';
+const THREE_JS = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+const IND = { lib: null, three: null, fx: null, animated: false, open: null };
+function indMedian(xs) { if (!xs.length) return null; const s = [...xs].sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
+function indCtx() {
+  const act = S.inits.filter(i => i.stage !== 'Cerrada');
+  const ids = new Set(act.map(i => i.id));
+  const its = S.items.filter(t => ids.has(t.initiativeId) && t.type !== 'epica');
+  const open = its.filter(t => t.status !== 'done');
+  const rk = rankMap(); const cap = +S.config.capacity || 0;
+  const krs = []; act.forEach(i => (i.krs || []).forEach(k => { const b = +k.baseline, t = +k.target, c = +k.current; if ((t - b) !== 0 && isFinite(b) && isFinite(t) && isFinite(c)) krs.push(clamp((c - b) / (t - b), 0, 1)); }));
+  const cons = new Map(act.map(i => [i.id, consensus(i)]));
+  const crit = key => { const xs = act.map(i => { const c = cons.get(i.id); const src = c.agreedSet ? i.agreed : c.mean; return src && isFinite(+src[key]) ? +src[key] : null; }).filter(x => x != null); return xs.length ? avg(xs) : null; };
+  let depN = 0, depBad = 0, depCap = 0;
+  act.forEach(i => depsOf(i).forEach(d => { depN++; const iss = depIssues(i, d, rk); if (iss.length) depBad++; if (iss.some(x => x.k === 'capacidad')) depCap++; }));
+  return { act, its, open, rk, cap, krs, cons, crit, depN, depBad, depCap };
+}
+const pctF = v => Math.round(v * 100) + '%';
+// Cada indicador: n (nombre), f (fórmula), src (quién lo usa o define), fr (frecuencia); c(ctx) devuelve {v, s} con s de 0 a 1 (null = solo contexto) o null si la plataforma aún no tiene el dato.
+const IND_DIMS = [
+  { k: 'alineacion', t: 'Alineación estratégica', d: '¿El portafolio empuja la estrategia o solo acumula proyectos?', kpis: [
+    { n: 'Iniciativas con resultado clave', f: 'Activas con ≥ 1 KR ÷ activas', src: 'OKR a nivel de portafolio · Gartner, financiamiento por producto', fr: 'Trimestral', c: x => x.act.length ? { v: x.act.filter(i => (i.krs || []).length).length / x.act.length, fmt: pctF } : null },
+    { n: 'Iniciativas evaluadas con el método común', f: 'Activas con ≥ 1 evaluación completa ÷ activas', src: 'PMI · Standard for Portfolio Management', fr: 'Por ciclo de priorización', c: x => x.act.length ? { v: x.act.filter(i => x.cons.get(i.id).n > 0 || x.cons.get(i.id).agreedSet).length / x.act.length, fmt: pctF } : null },
+    { n: 'Alineación promedio con el Plan Estratégico', f: 'Promedio del criterio «estrategia» (1 a 5)', src: 'Criterio del método IACC · SAFe, temas estratégicos', fr: 'Por ciclo', c: x => { const v = x.crit('estrategia'); return v == null ? null : { v: (v - 1) / 4, fmt: () => v.toFixed(1) + ' / 5' }; } }
+  ] },
+  { k: 'valor', t: 'Valor y beneficios', d: 'Resultados para estudiantes e institución, no entregables.', kpis: [
+    { n: 'Avance promedio hacia los resultados clave', f: 'Promedio de (actual − base) ÷ (meta − base)', src: 'EBM de Scrum.org · SAFe Measure and Grow (Outcomes)', fr: 'Mensual', c: x => x.krs.length ? { v: avg(x.krs), fmt: pctF } : null },
+    { n: 'Resultados clave en camino', f: 'KR con avance ≥ 50% ÷ KR medidos', src: 'Práctica OKR (0,7 = éxito en KR aspiracional)', fr: 'Mensual', c: x => x.krs.length ? { v: x.krs.filter(p => p >= 0.5).length / x.krs.length, fmt: pctF } : null },
+    { n: 'Valor no realizado', f: 'Brecha entre la satisfacción deseada y la actual del usuario', src: 'EBM de Scrum.org (Unrealized Value)', fr: 'Trimestral', c: () => null }
+  ] },
+  { k: 'finanzas', t: 'Finanzas y costo', d: 'Cuánto cuesta cada resultado, incluido el gasto en IA.', kpis: [
+    { n: 'Varianza presupuestaria', f: '(Real − presupuestado) ÷ presupuestado', src: 'TBM Council, catálogo de KPI 2026', fr: 'Mensual', c: () => null },
+    { n: 'Mezcla de inversión Run / Grow / Transform', f: '% del gasto en operar, crecer y transformar', src: 'TBM Council · Gartner', fr: 'Trimestral', c: () => null },
+    { n: 'Costo de IA por resultado exitoso', f: 'Gasto en IA ÷ resultados logrados', src: 'FinOps Foundation, FinOps for AI (oct-2026)', fr: 'Mensual', c: () => null },
+    { n: 'Costo de la demora (WSJF)', f: 'Costo de la demora ÷ tamaño del trabajo', src: 'SAFe · Reinertsen', fr: 'Por ciclo', c: () => null }
+  ] },
+  { k: 'riesgo', t: 'Riesgo y cumplimiento', d: 'Exposición a fallas, plazos normativos y uso responsable de la IA.', kpis: [
+    { n: 'Iniciativas en riesgo o fuera de curso', f: 'Activas con salud ≠ en curso ÷ activas', src: 'PMI · informes de salud del portafolio', fr: 'Quincenal', c: x => x.act.length ? { v: x.act.filter(i => i.health && i.health !== 'en_curso').length / x.act.length, fmt: pctF, inv: true } : null },
+    { n: 'Urgencia normativa promedio', f: 'Promedio del criterio «urgencia» (1 a 5)', src: 'Criterio del método IACC (CNA, Mineduc, SIES, Ley 21.719)', fr: 'Por ciclo', c: x => { const v = x.crit('urgencia'); return v == null ? null : { v: null, fmt: () => v.toFixed(1) + ' / 5' }; } },
+    { n: 'Sistemas de IA inventariados y evaluados', f: 'Sistemas con evaluación de impacto ÷ sistemas de IA', src: 'NIST AI RMF · ISO/IEC 42001 · EU AI Act', fr: 'Semestral', c: () => null }
+  ] },
+  { k: 'capacidad', t: 'Capacidad y recursos', d: 'Lo que cabe de verdad en el año y quién lo sostiene.', kpis: [
+    { n: 'Demanda frente a capacidad', f: 'Iniciativas con puntaje ÷ capacidad del año', src: 'SAFe, Lean Portfolio Management · Ley de Little', fr: 'Por ciclo', c: x => { if (!x.cap) return null; const n = Object.keys(x.rk).length; const r = n / x.cap; return { v: r <= 1 ? 1 : Math.max(0, 2 - r), fmt: () => r.toFixed(2) + '×' }; } },
+    { n: 'Iniciativas bajo la línea de capacidad', f: 'Con puntaje y fuera de la capacidad', src: 'Planificación de capacidad del portafolio', fr: 'Por ciclo', c: x => x.cap ? { v: null, fmt: () => String(Math.max(0, Object.keys(x.rk).length - x.cap)) } : null },
+    { n: 'Roles duplicados en una iniciativa', f: 'Iniciativas donde una persona es PO y PM o PMO', src: 'Matriz de responsabilidades (RACI)', fr: 'Mensual', c: x => { if (!x.act.length) return null; const n = x.act.filter(i => { const r = [i.po, i.pm, i.pmo].filter(Boolean); return new Set(r).size < r.length; }).length; return { v: 1 - n / x.act.length, fmt: () => String(n) }; } }
+  ] },
+  { k: 'flujo', t: 'Flujo y entrega', d: 'Qué tan rápido y predecible fluye el trabajo.', kpis: [
+    { n: 'Carga de flujo (trabajo en curso)', f: 'Ítems en «En curso» o «En revisión»', src: 'Flow Framework (Kersten) · SAFe flow metrics', fr: 'Semanal', c: x => ({ v: null, fmt: () => String(x.its.filter(t => t.status === 'doing' || t.status === 'review').length) }) },
+    { n: 'Velocidad de flujo', f: 'Ítems terminados en los últimos 14 días', src: 'Flow Framework · DORA (throughput)', fr: 'Semanal', c: x => ({ v: null, fmt: () => String(x.its.filter(t => t.status === 'done' && t.doneAt >= Date.now() - 14 * 864e5).length) }) },
+    { n: 'Tiempo de flujo (mediana)', f: 'Mediana de días entre inicio y término', src: 'Flow Framework · DORA (lead time)', fr: 'Semanal', c: x => { const m = indMedian(x.its.filter(t => t.status === 'done' && t.doneAt && t.startedAt).map(t => (t.doneAt - t.startedAt) / 864e5)); return m == null ? null : { v: null, fmt: () => m.toFixed(1) + ' d' }; } },
+    { n: 'Trabajo bloqueado', f: 'Ítems bloqueados ÷ ítems abiertos', src: 'Flow Framework · práctica kanban', fr: 'Semanal', c: x => x.open.length ? { v: x.open.filter(t => t.blocked).length / x.open.length, fmt: pctF, inv: true } : null },
+    { n: 'Predictibilidad de hitos', f: 'Hitos terminados a tiempo ÷ hitos terminados', src: 'SAFe (predictibilidad) · PMI', fr: 'Mensual', c: x => { const h = x.its.filter(t => t.type === 'hito' && t.status === 'done' && t.due && t.doneAt); return h.length ? { v: h.filter(t => new Date(t.doneAt).toISOString().slice(0, 10) <= t.due).length / h.length, fmt: pctF } : null; } }
+  ] },
+  { k: 'calidad', t: 'Calidad y confiabilidad', d: 'Si lo entregado funciona y se sostiene.', kpis: [
+    { n: 'Tasa de cambios fallidos', f: 'Despliegues que causan falla ÷ despliegues', src: 'DORA (guía actualizada ene-2026)', fr: 'Mensual', c: () => null },
+    { n: 'Tasa de retrabajo de despliegues', f: 'Despliegues no planificados para corregir ÷ despliegues', src: 'DORA 2025 (métrica nueva)', fr: 'Mensual', c: () => null },
+    { n: 'Cumplimiento del SLO', f: 'Tiempo dentro del objetivo de servicio ÷ tiempo total', src: 'Google SRE (error budgets)', fr: 'Mensual', c: () => null }
+  ] },
+  { k: 'experiencia', t: 'Experiencia del estudiante', d: 'Lo que vive la persona usuaria del producto.', kpis: [
+    { n: 'Satisfacción (CSAT) y esfuerzo (CES)', f: 'Promedio de encuesta tras la interacción', src: 'Gartner (prefiere CSAT y CES al NPS)', fr: 'Mensual', c: () => null },
+    { n: 'Retención y progresión', f: 'Estudiantes que continúan ÷ matriculados', src: 'SIES · EDUCAUSE (éxito estudiantil)', fr: 'Semestral', c: () => null },
+    { n: 'Adopción y tarea completada', f: 'Usuarios activos ÷ objetivo · tareas exitosas ÷ intentos', src: 'Google HEART', fr: 'Mensual', c: () => null }
+  ] },
+  { k: 'equipo', t: 'Salud del equipo', d: 'Si el ritmo es sostenible para las personas.', kpis: [
+    { n: 'Carga por persona', f: 'Ítems abiertos asignados ÷ personas con ítems', src: 'Ley de Little · práctica de WIP por persona', fr: 'Semanal', c: x => { const ppl = {}; x.open.forEach(t => { if (t.assignee && refKind(t.assignee) !== 'a') ppl[t.assignee] = (ppl[t.assignee] || 0) + 1; }); const n = Object.keys(ppl).length; if (!n) return null; const a = avg(Object.values(ppl)); return { v: a <= 3 ? 1 : Math.max(0, 1 - (a - 3) / 5), fmt: () => a.toFixed(1) }; } },
+    { n: 'Experiencia de desarrollo (DXI)', f: 'Índice de encuesta de 14 condiciones', src: 'DX Core 4 (DX, de Atlassian)', fr: 'Trimestral', c: () => null },
+    { n: 'eNPS o encuesta de salud del equipo', f: 'Promotores − detractores', src: 'Spotify Squad Health Check · Atlassian Team Health Monitor', fr: 'Trimestral', c: () => null }
+  ] },
+  { k: 'dependencias', t: 'Dependencias', d: 'Los choques entre equipos antes de que se vuelvan atrasos.', kpis: [
+    { n: 'Dependencias activas', f: 'Dependencias registradas entre iniciativas activas', src: 'SAFe (tablero de dependencias) · Jira Align', fr: 'Quincenal', c: x => ({ v: null, fmt: () => String(x.depN) }) },
+    { n: 'Dependencias con conflicto', f: 'Con conflicto de fecha, capacidad o estado ÷ dependencias', src: 'Planview · práctica de PMO', fr: 'Quincenal', c: x => x.depN ? { v: x.depBad / x.depN, fmt: pctF, inv: true } : null },
+    { n: 'Dependencias críticas por capacidad', f: 'Dependen de algo bajo la línea de capacidad', src: 'Planificación de capacidad del portafolio', fr: 'Por ciclo', c: x => x.depN ? { v: x.depCap ? 0 : 1, fmt: () => String(x.depCap) } : null }
+  ] },
+  { k: 'gobierno', t: 'Gobierno y decisiones', d: 'Si el comité decide a tiempo y deja evidencia.', kpis: [
+    { n: 'Iniciativas con decisión del comité', f: 'Activas (no Idea) con decisión vigente ÷ activas (no Idea)', src: 'Gartner (decision velocity) · PMI, gobierno', fr: 'Por sesión', c: x => { const a = x.act.filter(i => i.stage !== 'Idea'); return a.length ? { v: a.filter(i => decisionsFor(i.id).some(d => d.status !== 'revocada')).length / a.length, fmt: pctF } : null; } },
+    { n: 'Consenso del comité', f: 'Evaluadas con consenso o puntaje acordado ÷ evaluadas', src: 'Método IACC (umbral de dispersión)', fr: 'Por ciclo', c: x => { const ev = x.act.map(i => x.cons.get(i.id)).filter(c => c.n > 0 || c.agreedSet); return ev.length ? { v: ev.filter(c => c.state === 'acordado' || c.state === 'consenso').length / ev.length, fmt: pctF } : null; } },
+    { n: 'Días desde el último update (mediana)', f: 'Mediana por iniciativa activa', src: 'Práctica de PMO · Amazon WBR (revisión semanal)', fr: 'Semanal', c: x => { const ds = x.act.map(i => { const u = S.updates.filter(u => u.initiativeId === i.id).map(u => u.at || 0); return u.length ? (Date.now() - Math.max(...u)) / 864e5 : null; }).filter(v => v != null); const m = indMedian(ds); return m == null ? null : { v: m <= 14 ? 1 : Math.max(0, 1 - (m - 14) / 30), fmt: () => Math.round(m) + ' d' }; } }
+  ] },
+  { k: 'ia', t: 'IA y agentes', d: 'Contexto del uso de IA, nunca una meta en sí misma.', kpis: [
+    { n: 'Ítems asignados a agentes', f: 'Ítems con agente ÷ ítems asignados (solo contexto)', src: 'API de métricas de GitHub Copilot 2026 · DX (Utilization)', fr: 'Mensual', c: x => { const a = x.its.filter(t => t.assignee); return a.length ? { v: null, fmt: () => pctF(a.filter(t => refKind(t.assignee) === 'a').length / a.length) } : null; } },
+    { n: 'Trabajo de agentes sin responsable humano', f: 'Ítems de agente sin responsable', src: 'NIST AI RMF (supervisión humana)', fr: 'Semanal', c: x => { const a = x.its.filter(t => refKind(t.assignee) === 'a'); return a.length ? { v: a.some(t => !t.dri) ? 0 : 1, fmt: () => String(a.filter(t => !t.dri).length) } : null; } },
+    { n: 'Borradores de IA sin revisar', f: 'Ítems «Borrador IA» ÷ ítems creados por IA', src: 'LinearB 2026 (aceptación del trabajo de IA)', fr: 'Semanal', c: x => { const a = S.items.filter(t => t.aiDraft != null || t.byAI); if (!a.length) return null; const p = S.items.filter(t => t.aiDraft).length; return { v: 1 - p / a.length, fmt: () => String(p) }; } }
+  ] }
+];
+function indEval() {
+  const x = indCtx();
+  return IND_DIMS.map(d => {
+    const rows = d.kpis.map(k => { let r = null; try { r = k.c(x); } catch (e) { r = null; } const s = r && r.v != null ? (r.inv ? 1 - r.v : r.v) : null; return { ...k, r, s, txt: r ? (r.fmt ? r.fmt(r.v) : String(r.v)) : null }; });
+    const ss = rows.map(r => r.s).filter(s => s != null);
+    return { ...d, rows, score: ss.length ? avg(ss) : null, live: rows.filter(r => r.r).length };
+  });
+}
+const indTone = s => s == null ? 'none' : s >= 0.75 ? 'ok' : s >= 0.5 ? 'warn' : 'bad';
+function viewIndicators() {
+  if (!S.inits.length) return emptyInits();
+  const dims = indEval(); const sc = dims.map(d => d.score).filter(s => s != null);
+  const overall = sc.length ? avg(sc) : null; const liveDims = dims.filter(d => d.score != null || d.live).length;
+  const gap = dims.filter(d => !d.live).map(d => d.t);
+  const ring = (s, big) => { const r = big ? 54 : 26, c = 2 * Math.PI * r, w = big ? 9 : 5, sz = (r + w) * 2; return `<svg class="ind-ring ${indTone(s)}" viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true"><circle cx="${sz / 2}" cy="${sz / 2}" r="${r}" class="trk" stroke-width="${w}"/><circle cx="${sz / 2}" cy="${sz / 2}" r="${r}" class="val" stroke-width="${w}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c * (1 - (s || 0))).toFixed(1)}" data-full="${c.toFixed(1)}" data-s="${s == null ? '' : s}" transform="rotate(-90 ${sz / 2} ${sz / 2})"/></svg>`; };
+  const cards = dims.map((d, i) => `<article class="ind-card ${indTone(d.score)}${IND.open === d.k ? ' open' : ''}" id="ind-${d.k}" data-dim="${i}">
+      <button type="button" class="ind-head" data-action="ind-toggle" data-k="${d.k}" aria-expanded="${IND.open === d.k}">
+        <span class="ind-gauge">${ring(d.score)}<b class="num" data-count="${d.score == null ? '' : Math.round(d.score * 100)}">${d.score == null ? '—' : Math.round(d.score * 100)}</b></span>
+        <span class="ind-tt"><span class="ind-n">${String(i + 1).padStart(2, '0')}</span><span class="ind-t">${esc(d.t)}</span><span class="ind-d">${esc(d.d)}</span></span>
+        <span class="ind-live">${d.live}/${d.kpis.length} en vivo</span>
+      </button>
+      <ul class="ind-kpis">${d.rows.map(r => `<li class="${r.r ? 'on' : 'off'}"><div class="kn"><span>${esc(r.n)}</span><span class="kv num">${r.r ? esc(r.txt) : 'sin dato'}</span></div><div class="kd"><span><b>Fórmula</b> ${esc(r.f)}</span><span><b>Referente</b> ${esc(r.src)}</span><span><b>Frecuencia</b> ${esc(r.fr)}</span></div></li>`).join('')}</ul>
+    </article>`).join('');
+  return `<section class="ind-hero"><div class="ind-hero-l"><span class="eyebrow">Salud del portafolio · 12 dimensiones</span>
+      <div class="ind-big">${ring(overall, true)}<span class="hv num" data-count="${overall == null ? '' : Math.round(overall * 100)}">${overall == null ? '—' : Math.round(overall * 100)}</span></div>
+      <p class="ind-sum"><b>${liveDims} de 12</b> dimensiones tienen al menos un indicador en vivo con los datos de la plataforma.${gap.length ? ` Sin dato todavía: ${esc(gap.join(', '))}.` : ''}</p>
+      <p class="small muted">El puntaje de cada dimensión es el promedio de sus indicadores con meta (0 a 100). Los indicadores de contexto se muestran pero no suman.</p></div>
+      <div class="ind-3d" id="ind-3d" aria-label="Constelación de las 12 dimensiones; cada esfera crece y se colorea según su puntaje"><div class="ind-tip" id="ind-tip" hidden></div></div></section>
+    <div class="ind-grid">${cards}</div>
+    <section class="ind-anti"><h2>Lo que no hay que hacer con estos números</h2><div class="ind-anti-g">
+      <div><b>Ley de Goodhart</b><span>Cuando una medida se vuelve meta, deja de ser buena medida. Ningún indicador de flujo o de IA se usa para evaluar personas.</span></div>
+      <div><b>Métricas de vanidad</b><span>Contar entregas, horas o ítems no es valor. Los resultados clave van primero.</span></div>
+      <div><b>% de trabajo hecho por IA como meta</b><span>Es contexto. Faros AI 2026 y LinearB 2026 muestran más retrabajo y revisión cuando se empuja sin control.</span></div>
+      <div><b>Reporte «sandía»</b><span>Verde por fuera, rojo por dentro. La salud se respalda con resultados clave y updates recientes.</span></div>
+    </div><p class="small muted">Catálogo basado en la investigación «KPI de portafolio digital 2026» (4 de noviembre de 2026): PMI, SAFe Measure and Grow, EBM de Scrum.org, OKR, Gartner, TBM Council, FinOps Foundation, DORA, Flow Framework, DX Core 4, Google SRE y HEART, NIST AI RMF e ISO/IEC 42001.</p></section>`;
+}
+async function indLibs() {
+  if (IND.lib) return IND.lib;
+  IND.lib = (async () => { const out = {}; try { if (!window.gsap) await loadScript(GSAP_JS); out.gsap = window.gsap; } catch (e) {} try { out.THREE = await import(THREE_JS); } catch (e) {} return out; })();
+  return IND.lib;
+}
+async function mountIndicators() {
+  const host = $('#ind-3d'); if (!host) return;
+  const dims = indEval(); const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const { gsap, THREE } = await indLibs();
+  if (!$('#ind-3d')) return;
+  if (gsap && !IND.animated && !reduce) {
+    IND.animated = true;
+    gsap.from('.ind-card', { y: 18, opacity: 0, duration: .55, ease: 'power3.out', stagger: .035, clearProps: 'all' });
+    document.querySelectorAll('.ind-ring .val').forEach(c => { const full = +c.dataset.full, s = c.dataset.s === '' ? 0 : +c.dataset.s; gsap.fromTo(c, { attr: { 'stroke-dashoffset': full } }, { attr: { 'stroke-dashoffset': full * (1 - s) }, duration: 1.2, ease: 'power2.out', delay: .15 }); });
+    document.querySelectorAll('[data-count]').forEach(el => { const v = el.dataset.count; if (v === '') return; const o = { n: 0 }; gsap.to(o, { n: +v, duration: 1.2, ease: 'power2.out', delay: .15, onUpdate: () => { el.textContent = Math.round(o.n); } }); });
+  }
+  if (!THREE) { host.classList.add('flat'); return; }
+  if (!IND.fx) IND.fx = indScene(THREE, reduce);
+  IND.fx.mount(host); IND.fx.update(dims);
+}
+function indScene(THREE, reduce) {
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene(); const cam = new THREE.PerspectiveCamera(42, 1, .1, 100); cam.position.set(0, 2.4, 9.4); cam.lookAt(0, 0, 0);
+  scene.add(new THREE.AmbientLight(0xffffff, .55)); const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(4, 6, 5); scene.add(key);
+  const rim = new THREE.PointLight(0x7fc35a, 18, 30); rim.position.set(-5, -2, -4); scene.add(rim);
+  const world = new THREE.Group(); scene.add(world);
+  const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.05, 3), new THREE.MeshStandardMaterial({ color: 0x1f3b30, roughness: .35, metalness: .2, emissive: 0x2c6b3a, emissiveIntensity: .35, flatShading: true }));
+  world.add(core);
+  const halo = new THREE.Mesh(new THREE.TorusGeometry(3.25, .012, 8, 220), new THREE.MeshBasicMaterial({ color: 0x8fa79a, transparent: true, opacity: .45 })); halo.rotation.x = Math.PI / 2; world.add(halo);
+  const halo2 = halo.clone(); halo2.scale.setScalar(.72); halo2.material = halo.material.clone(); halo2.material.opacity = .22; world.add(halo2);
+  const TONE = { ok: 0x4caf50, warn: 0xe0a43a, bad: 0xd8574a, none: 0x9aa3a6 };
+  const nodes = [], lines = [];
+  for (let i = 0; i < 12; i++) {
+    const a = i / 12 * Math.PI * 2; const g = new THREE.Group(); g.position.set(Math.cos(a) * 3.25, Math.sin(a * 2) * .35, Math.sin(a) * 3.25);
+    const m = new THREE.Mesh(new THREE.SphereGeometry(.3, 32, 24), new THREE.MeshStandardMaterial({ color: TONE.none, roughness: .3, metalness: .1, emissive: TONE.none, emissiveIntensity: .25 }));
+    m.userData.i = i; g.add(m); world.add(g); nodes.push(m);
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), g.position.clone()]);
+    const ln = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x8fa79a, transparent: true, opacity: .35 })); world.add(ln); lines.push(ln);
+  }
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(-9, -9); let dims = [], host = null, hover = -1, drag = null, rotY = 0, rotX = .12, vel = reduce ? 0 : .0025;
+  const el = renderer.domElement; el.style.cursor = 'grab';
+  el.addEventListener('pointermove', e => { const b = el.getBoundingClientRect(); ptr.set((e.clientX - b.left) / b.width * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1); if (drag) { rotY += (e.clientX - drag.x) * .006; rotX = clamp(rotX + (e.clientY - drag.y) * .004, -.5, .6); drag = { x: e.clientX, y: e.clientY }; } const tip = $('#ind-tip'); if (tip) { tip.style.left = (e.clientX - b.left + 14) + 'px'; tip.style.top = (e.clientY - b.top + 10) + 'px'; } });
+  el.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, t: Date.now() }; el.setPointerCapture(e.pointerId); el.style.cursor = 'grabbing'; });
+  el.addEventListener('pointerup', e => { const wasClick = drag && Date.now() - drag.t < 250; drag = null; el.style.cursor = 'grab'; if (wasClick && hover >= 0 && dims[hover]) { IND.open = dims[hover].k; scheduleRender(); setTimeout(() => { const c = document.getElementById('ind-' + dims[hover].k); if (c) c.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); }, 160); } });
+  el.addEventListener('pointerleave', () => { ptr.set(-9, -9); });
+  const size = () => { if (!host) return; const w = host.clientWidth || 400, h = host.clientHeight || 360; renderer.setSize(w, h, false); el.style.width = '100%'; el.style.height = '100%'; cam.aspect = w / h; cam.updateProjectionMatrix(); };
+  addEventListener('resize', size);
+  const t0 = performance.now();
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!host || !document.body.contains(el) || document.hidden) return;
+    const t = (performance.now() - t0) / 1000;
+    if (!drag) rotY += vel; world.rotation.y = rotY; world.rotation.x = rotX;
+    core.rotation.y = t * .15; core.rotation.x = t * .07;
+    nodes.forEach((m, i) => { const s = m.userData.target || .6; const k = s + (reduce ? 0 : Math.sin(t * 1.6 + i) * .025); m.scale.lerp(new THREE.Vector3(k, k, k), .08); });
+    ray.setFromCamera(ptr, cam); const hit = ray.intersectObjects(nodes)[0]; const h = hit ? hit.object.userData.i : -1;
+    if (h !== hover) { hover = h; nodes.forEach((m, i) => { m.material.emissiveIntensity = i === h ? .9 : .25; }); const tip = $('#ind-tip'); if (tip) { if (h >= 0 && dims[h]) { const d = dims[h]; tip.innerHTML = `<b>${esc(d.t)}</b><span>${d.score == null ? 'Sin dato en vivo' : Math.round(d.score * 100) + ' / 100'} · ${d.live}/${d.kpis.length} indicadores</span>`; tip.hidden = false; } else tip.hidden = true; } el.style.cursor = h >= 0 ? 'pointer' : (drag ? 'grabbing' : 'grab'); }
+    renderer.render(scene, cam);
+  })();
+  return {
+    mount(h) { if (host !== h) { host = h; h.appendChild(el); size(); } },
+    update(d) { dims = d; d.forEach((x, i) => { const tone = TONE[indTone(x.score)]; nodes[i].material.color.setHex(tone); nodes[i].material.emissive.setHex(tone); nodes[i].userData.target = x.score == null ? .55 : .7 + x.score * .75; lines[i].material.opacity = x.score == null ? .15 : .25 + x.score * .4; }); }
+  };
+}
+
 function render() {
   renderNav();
   const main = $('#main');
@@ -818,11 +1049,12 @@ function render() {
     : `<div class="banner"><b>Modo local.</b> Los datos se guardan solo en este navegador. Para trabajar en equipo, configura el servidor Supabase como indica el README del repositorio.</div>`;
   else if (!S.canWrite) html += `<div class="banner">Tienes acceso de lectura. Para evaluar o editar, pide acceso de Colaborador a quien administra el portafolio.</div>`;
   if (!S.loaded) html += `<div class="empty"><h3>Cargando el portafolio…</h3><p>Conectando con el almacenamiento compartido de la Vicerrectoría.</p></div>`;
-  else html += ({ portafolio: viewPortfolio, roadmap: viewRoadmap, tablero: viewBoard, metricas: viewMetrics, comite: viewCommittee })[S.view]();
+  else html += ({ portafolio: viewPortfolio, roadmap: viewRoadmap, tablero: viewBoard, metricas: viewMetrics, comite: viewCommittee, indicadores: viewIndicators })[S.view]();
   main.innerHTML = html;
   if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); if (sel && el.setSelectionRange) try { el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
   if ($('.board')) $('.board').scrollLeft = sx;
   if (S.view === 'roadmap') requestAnimationFrame(drawDepLinks);
+  if (S.view === 'indicadores') mountIndicators(); else IND.animated = false;
   if (S.drawer && !S.drawerDirty && !($('#drawer').contains(document.activeElement) && document.activeElement !== $('#drawer'))) renderDrawer();
   hydratePeople();
 }
@@ -1680,6 +1912,7 @@ document.addEventListener('click', e => {
   const act = a.dataset.action, id = a.dataset.id;
   switch (act) {
     case 'go': go(a.dataset.view); break;
+    case 'ind-toggle': IND.open = IND.open === a.dataset.k ? null : a.dataset.k; render(); break;
     case 'palette': openPalette(); break;
     case 'open-init': e.stopPropagation(); openDrawer(id, a.dataset.tab || 'resumen'); break;
     case 'drawer-close': closeDrawer(); break;
