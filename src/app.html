@@ -866,9 +866,14 @@ function indCtx() {
   const crit = key => { const xs = act.map(i => { const c = cons.get(i.id); const src = c.agreedSet ? i.agreed : c.mean; return src && isFinite(+src[key]) ? +src[key] : null; }).filter(x => x != null); return xs.length ? avg(xs) : null; };
   let depN = 0, depBad = 0, depCap = 0;
   act.forEach(i => depsOf(i).forEach(d => { depN++; const iss = depIssues(i, d, rk); if (iss.length) depBad++; if (iss.some(x => x.k === 'capacidad')) depCap++; }));
-  return { act, its, open, rk, cap, krs, cons, crit, depN, depBad, depCap };
+  const M = act.map(i => ({ i, m: i.metrics || {} }));
+  const has = (...ks) => M.filter(x => ks.every(k => x.m[k] != null && x.m[k] !== '' && isFinite(+x.m[k])));
+  const sumK = (arr, k) => arr.reduce((a, x) => a + (+x.m[k] || 0), 0);
+  return { act, its, open, rk, cap, krs, cons, crit, depN, depBad, depCap, M, has, sumK };
 }
 const pctF = v => Math.round(v * 100) + '%';
+const clp = n => { const a = Math.abs(n); return (n < 0 ? '−' : '') + '$' + (a >= 1e6 ? (a / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' M' : Math.round(a).toLocaleString('es-CL')); };
+
 // Cada indicador: n (nombre), f (fórmula), src (quién lo usa o define), fr (frecuencia); c(ctx) devuelve {v, s} con s de 0 a 1 (null = solo contexto) o null si la plataforma aún no tiene el dato.
 const IND_DIMS = [
   { k: 'alineacion', t: 'Alineación estratégica', d: '¿El portafolio empuja la estrategia o solo acumula proyectos?', kpis: [
@@ -879,18 +884,18 @@ const IND_DIMS = [
   { k: 'valor', t: 'Valor y beneficios', d: 'Resultados para estudiantes e institución, no entregables.', kpis: [
     { n: 'Avance promedio hacia los resultados clave', f: 'Promedio de (actual − base) ÷ (meta − base)', src: 'EBM de Scrum.org · SAFe Measure and Grow (Outcomes)', fr: 'Mensual', c: x => x.krs.length ? { v: avg(x.krs), fmt: pctF } : null },
     { n: 'Resultados clave en camino', f: 'KR con avance ≥ 50% ÷ KR medidos', src: 'Práctica OKR (0,7 = éxito en KR aspiracional)', fr: 'Mensual', c: x => x.krs.length ? { v: x.krs.filter(p => p >= 0.5).length / x.krs.length, fmt: pctF } : null },
-    { n: 'Valor no realizado', f: 'Brecha entre la satisfacción deseada y la actual del usuario', src: 'EBM de Scrum.org (Unrealized Value)', fr: 'Trimestral', c: () => null }
+    { n: 'Valor no realizado', f: 'Promedio de (satisfacción deseada − CSAT actual)', src: 'EBM de Scrum.org (Unrealized Value)', fr: 'Trimestral', c: x => { const a = x.has('csat', 'csatMeta'); if (!a.length) return null; const g = avg(a.map(y => Math.max(0, y.m.csatMeta - y.m.csat))); return { v: 1 - clamp(g / 4, 0, 1), fmt: () => g.toFixed(1) + ' pts' }; } }
   ] },
   { k: 'finanzas', t: 'Finanzas y costo', d: 'Cuánto cuesta cada resultado, incluido el gasto en IA.', kpis: [
-    { n: 'Varianza presupuestaria', f: '(Real − presupuestado) ÷ presupuestado', src: 'TBM Council, catálogo de KPI 2026', fr: 'Mensual', c: () => null },
-    { n: 'Mezcla de inversión Run / Grow / Transform', f: '% del gasto en operar, crecer y transformar', src: 'TBM Council · Gartner', fr: 'Trimestral', c: () => null },
-    { n: 'Costo de IA por resultado exitoso', f: 'Gasto en IA ÷ resultados logrados', src: 'FinOps Foundation, FinOps for AI (oct-2026)', fr: 'Mensual', c: () => null },
-    { n: 'Costo de la demora (WSJF)', f: 'Costo de la demora ÷ tamaño del trabajo', src: 'SAFe · Reinertsen', fr: 'Por ciclo', c: () => null }
+    { n: 'Varianza presupuestaria', f: '(Gasto real − presupuesto planificado a la fecha) ÷ planificado', src: 'TBM Council, catálogo de KPI 2026', fr: 'Mensual', c: x => { const a = x.has('gastoReal', 'presupuestoFecha'); const P = x.sumK(a, 'presupuestoFecha'); if (!P) return null; const v = (x.sumK(a, 'gastoReal') - P) / P; return { v: Math.abs(v) <= .05 ? 1 : Math.max(0, 1 - Math.abs(v) * 2), fmt: () => (v > 0 ? '+' : '') + Math.round(v * 100) + '%' }; } },
+    { n: 'Mezcla de inversión Run / Grow / Transform', f: '% del presupuesto en operar, crecer y transformar', src: 'TBM Council · Gartner', fr: 'Trimestral', c: x => { const a = x.has('presupuesto').filter(y => y.m.inversion); const T = x.sumK(a, 'presupuesto'); if (!T) return null; const p = k => Math.round(x.sumK(a.filter(y => y.m.inversion === k), 'presupuesto') / T * 100); return { v: null, fmt: () => `R ${p('run')}% · G ${p('grow')}% · T ${p('transform')}%` }; } },
+    { n: 'Costo de IA por resultado exitoso', f: 'Gasto en IA ÷ resultados exitosos logrados con IA', src: 'FinOps Foundation, FinOps for AI (oct-2026)', fr: 'Mensual', c: x => { const a = x.has('gastoIA', 'resultadosIA'); const r = x.sumK(a, 'resultadosIA'); return r ? { v: null, fmt: () => clp(x.sumK(a, 'gastoIA') / r) } : null; } },
+    { n: 'Mayor costo de la demora (WSJF)', f: 'Costo de la demora semanal ÷ esfuerzo acordado; se muestra la iniciativa más alta', src: 'SAFe · Reinertsen', fr: 'Por ciclo', c: x => { const a = x.has('costoDemora').map(y => { const c = x.cons.get(y.i.id); const e = c.agreedSet ? +y.i.agreed.esfuerzo : c.mean ? c.mean.esfuerzo : null; return e ? { code: y.i.code, w: y.m.costoDemora / e } : null; }).filter(Boolean).sort((p, q) => q.w - p.w); return a.length ? { v: null, fmt: () => `${a[0].code} · ${clp(a[0].w)}/sem` } : null; } }
   ] },
   { k: 'riesgo', t: 'Riesgo y cumplimiento', d: 'Exposición a fallas, plazos normativos y uso responsable de la IA.', kpis: [
     { n: 'Iniciativas en riesgo o fuera de curso', f: 'Activas con salud ≠ en curso ÷ activas', src: 'PMI · informes de salud del portafolio', fr: 'Quincenal', c: x => x.act.length ? { v: x.act.filter(i => i.health && i.health !== 'en_curso').length / x.act.length, fmt: pctF, inv: true } : null },
     { n: 'Urgencia normativa promedio', f: 'Promedio del criterio «urgencia» (1 a 5)', src: 'Criterio del método IACC (CNA, Mineduc, SIES, Ley 21.719)', fr: 'Por ciclo', c: x => { const v = x.crit('urgencia'); return v == null ? null : { v: null, fmt: () => v.toFixed(1) + ' / 5' }; } },
-    { n: 'Sistemas de IA inventariados y evaluados', f: 'Sistemas con evaluación de impacto ÷ sistemas de IA', src: 'NIST AI RMF · ISO/IEC 42001 · EU AI Act', fr: 'Semestral', c: () => null }
+    { n: 'Sistemas de IA con evaluación de impacto', f: 'Iniciativas con IA y evaluación de impacto ÷ iniciativas con IA', src: 'NIST AI RMF · ISO/IEC 42001 · EU AI Act', fr: 'Semestral', c: x => { const a = x.M.filter(y => y.m.usaIA === 'si'); return a.length ? { v: a.filter(y => y.m.evaluacionImpacto === 'si').length / a.length, fmt: () => `${a.filter(y => y.m.evaluacionImpacto === 'si').length} de ${a.length}` } : null; } }
   ] },
   { k: 'capacidad', t: 'Capacidad y recursos', d: 'Lo que cabe de verdad en el año y quién lo sostiene.', kpis: [
     { n: 'Demanda frente a capacidad', f: 'Iniciativas con puntaje ÷ capacidad del año', src: 'SAFe, Lean Portfolio Management · Ley de Little', fr: 'Por ciclo', c: x => { if (!x.cap) return null; const n = Object.keys(x.rk).length; const r = n / x.cap; return { v: r <= 1 ? 1 : Math.max(0, 2 - r), fmt: () => r.toFixed(2) + '×' }; } },
@@ -905,19 +910,19 @@ const IND_DIMS = [
     { n: 'Predictibilidad de hitos', f: 'Hitos terminados a tiempo ÷ hitos terminados', src: 'SAFe (predictibilidad) · PMI', fr: 'Mensual', c: x => { const h = x.its.filter(t => t.type === 'hito' && t.status === 'done' && t.due && t.doneAt); return h.length ? { v: h.filter(t => new Date(t.doneAt).toISOString().slice(0, 10) <= t.due).length / h.length, fmt: pctF } : null; } }
   ] },
   { k: 'calidad', t: 'Calidad y confiabilidad', d: 'Si lo entregado funciona y se sostiene.', kpis: [
-    { n: 'Tasa de cambios fallidos', f: 'Despliegues que causan falla ÷ despliegues', src: 'DORA (guía actualizada ene-2026)', fr: 'Mensual', c: () => null },
-    { n: 'Tasa de retrabajo de despliegues', f: 'Despliegues no planificados para corregir ÷ despliegues', src: 'DORA 2025 (métrica nueva)', fr: 'Mensual', c: () => null },
-    { n: 'Cumplimiento del SLO', f: 'Tiempo dentro del objetivo de servicio ÷ tiempo total', src: 'Google SRE (error budgets)', fr: 'Mensual', c: () => null }
+    { n: 'Tasa de cambios fallidos', f: 'Despliegues que causan falla ÷ despliegues', src: 'DORA (guía actualizada ene-2026)', fr: 'Mensual', c: x => { const a = x.has('despliegues', 'desplieguesFallidos'); const d = x.sumK(a, 'despliegues'); return d ? { v: x.sumK(a, 'desplieguesFallidos') / d, fmt: pctF, inv: true } : null; } },
+    { n: 'Tasa de retrabajo de despliegues', f: 'Despliegues no planificados para corregir ÷ despliegues', src: 'DORA 2025 (métrica nueva)', fr: 'Mensual', c: x => { const a = x.has('despliegues', 'desplieguesRetrabajo'); const d = x.sumK(a, 'despliegues'); return d ? { v: x.sumK(a, 'desplieguesRetrabajo') / d, fmt: pctF, inv: true } : null; } },
+    { n: 'Cumplimiento del SLO', f: 'Iniciativas con disponibilidad real ≥ objetivo ÷ iniciativas con SLO', src: 'Google SRE (error budgets)', fr: 'Mensual', c: x => { const a = x.has('sloObjetivo', 'sloReal'); return a.length ? { v: a.filter(y => +y.m.sloReal >= +y.m.sloObjetivo).length / a.length, fmt: pctF } : null; } }
   ] },
   { k: 'experiencia', t: 'Experiencia del estudiante', d: 'Lo que vive la persona usuaria del producto.', kpis: [
-    { n: 'Satisfacción (CSAT) y esfuerzo (CES)', f: 'Promedio de encuesta tras la interacción', src: 'Gartner (prefiere CSAT y CES al NPS)', fr: 'Mensual', c: () => null },
-    { n: 'Retención y progresión', f: 'Estudiantes que continúan ÷ matriculados', src: 'SIES · EDUCAUSE (éxito estudiantil)', fr: 'Semestral', c: () => null },
-    { n: 'Adopción y tarea completada', f: 'Usuarios activos ÷ objetivo · tareas exitosas ÷ intentos', src: 'Google HEART', fr: 'Mensual', c: () => null }
+    { n: 'Satisfacción (CSAT) y esfuerzo (CES)', f: 'Promedio de encuesta tras la interacción', src: 'Gartner (prefiere CSAT y CES al NPS)', fr: 'Mensual', c: x => { const a = x.has('csat'); if (!a.length) return null; const c = avg(a.map(y => +y.m.csat)); const e = x.has('ces'); return { v: (c - 1) / 4, fmt: () => `${c.toFixed(1)} / 5${e.length ? ' · CES ' + avg(e.map(y => +y.m.ces)).toFixed(1) : ''}` }; } },
+    { n: 'Retención y progresión', f: 'Estudiantes que continúan ÷ matriculados (cohorte usuaria)', src: 'SIES · EDUCAUSE (éxito estudiantil)', fr: 'Semestral', c: x => { const a = x.has('retencion'); return a.length ? { v: avg(a.map(y => +y.m.retencion)) / 100, fmt: pctF } : null; } },
+    { n: 'Adopción', f: 'Usuarios activos ÷ objetivo de usuarios', src: 'Google HEART', fr: 'Mensual', c: x => { const a = x.has('adopcion'); return a.length ? { v: clamp(avg(a.map(y => +y.m.adopcion)) / 100, 0, 1), fmt: () => Math.round(avg(a.map(y => +y.m.adopcion))) + '%' } : null; } }
   ] },
   { k: 'equipo', t: 'Salud del equipo', d: 'Si el ritmo es sostenible para las personas.', kpis: [
     { n: 'Carga por persona', f: 'Ítems abiertos asignados ÷ personas con ítems', src: 'Ley de Little · práctica de WIP por persona', fr: 'Semanal', c: x => { const ppl = {}; x.open.forEach(t => { if (t.assignee && refKind(t.assignee) !== 'a') ppl[t.assignee] = (ppl[t.assignee] || 0) + 1; }); const n = Object.keys(ppl).length; if (!n) return null; const a = avg(Object.values(ppl)); return { v: a <= 3 ? 1 : Math.max(0, 1 - (a - 3) / 5), fmt: () => a.toFixed(1) }; } },
-    { n: 'Experiencia de desarrollo (DXI)', f: 'Índice de encuesta de 14 condiciones', src: 'DX Core 4 (DX, de Atlassian)', fr: 'Trimestral', c: () => null },
-    { n: 'eNPS o encuesta de salud del equipo', f: 'Promotores − detractores', src: 'Spotify Squad Health Check · Atlassian Team Health Monitor', fr: 'Trimestral', c: () => null }
+    { n: 'Experiencia de desarrollo (DXI)', f: 'Índice de encuesta de 14 condiciones (0 a 100)', src: 'DX Core 4 (DX, de Atlassian)', fr: 'Trimestral', c: x => { const a = x.has('dxi'); return a.length ? { v: avg(a.map(y => +y.m.dxi)) / 100, fmt: () => Math.round(avg(a.map(y => +y.m.dxi))) + ' / 100' } : null; } },
+    { n: 'eNPS del equipo', f: '% promotores − % detractores', src: 'Spotify Squad Health Check · Atlassian Team Health Monitor', fr: 'Trimestral', c: x => { const a = x.has('enps'); if (!a.length) return null; const e = avg(a.map(y => +y.m.enps)); return { v: (e + 100) / 200, fmt: () => (e > 0 ? '+' : '') + Math.round(e) }; } }
   ] },
   { k: 'dependencias', t: 'Dependencias', d: 'Los choques entre equipos antes de que se vuelvan atrasos.', kpis: [
     { n: 'Dependencias activas', f: 'Dependencias registradas entre iniciativas activas', src: 'SAFe (tablero de dependencias) · Jira Align', fr: 'Quincenal', c: x => ({ v: null, fmt: () => String(x.depN) }) },
@@ -1373,7 +1378,36 @@ function viewCommittee() {
 }
 
 /* ---------- Panel lateral: iniciativa ---------- */
-const TABS = [['resumen', 'Resumen'], ['descomposicion', 'Descomposición'], ['dependencias', 'Dependencias'], ['resultados', 'Resultados'], ['updates', 'Updates'], ['decisiones', 'Decisiones'], ['evaluar', 'Evaluación']];
+
+/* ---------- Campos de indicadores por iniciativa ---------- */
+const METRIC_GROUPS = [
+  ['Finanzas y costo', [
+    ['presupuesto', 'Presupuesto anual (CLP)', 'num'], ['gastoReal', 'Gasto real a la fecha (CLP)', 'num'], ['presupuestoFecha', 'Presupuesto planificado a la fecha (CLP)', 'num'],
+    ['inversion', 'Tipo de inversión', 'sel', [['', '—'], ['run', 'Run · operar'], ['grow', 'Grow · crecer'], ['transform', 'Transform · transformar']]],
+    ['gastoIA', 'Gasto en IA a la fecha (CLP)', 'num'], ['resultadosIA', 'Resultados exitosos logrados con IA (n.º)', 'num'], ['costoDemora', 'Costo de la demora (CLP por semana)', 'num']]],
+  ['Calidad y confiabilidad', [
+    ['despliegues', 'Despliegues en el último mes', 'num'], ['desplieguesFallidos', 'Despliegues que causaron falla', 'num'], ['desplieguesRetrabajo', 'Despliegues no planificados para corregir', 'num'],
+    ['sloObjetivo', 'Objetivo de disponibilidad (SLO, %)', 'num'], ['sloReal', 'Disponibilidad real del mes (%)', 'num']]],
+  ['Experiencia del estudiante', [
+    ['csat', 'Satisfacción CSAT (1 a 5)', 'num'], ['csatMeta', 'Satisfacción deseada (1 a 5)', 'num'], ['ces', 'Esfuerzo CES (1 a 7, menor es mejor)', 'num'],
+    ['retencion', 'Retención de la cohorte usuaria (%)', 'num'], ['adopcion', 'Adopción: usuarios activos ÷ objetivo (%)', 'num']]],
+  ['Salud del equipo', [['dxi', 'Experiencia de desarrollo DXI (0 a 100)', 'num'], ['enps', 'eNPS del equipo (−100 a 100)', 'num']]],
+  ['Riesgo y uso de IA', [['usaIA', '¿La iniciativa usa IA?', 'sel', [['', '—'], ['si', 'Sí'], ['no', 'No']]], ['evaluacionImpacto', '¿Tiene evaluación de impacto de IA?', 'sel', [['', '—'], ['si', 'Sí'], ['no', 'No']]]]]
+];
+function tabMetrics(i) {
+  const m = i.metrics || {};
+  const fld = ([k, l, t, opts]) => t === 'sel'
+    ? `<div class="fld"><label for="m-${k}">${esc(l)}</label><select class="inp" id="m-${k}" data-m="${k}" ${S.canWrite ? '' : 'disabled'}>${opts.map(([v, x]) => `<option value="${v}" ${String(m[k] ?? '') === v ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></div>`
+    : `<div class="fld"><label for="m-${k}">${esc(l)}</label><input class="inp num" id="m-${k}" data-m="${k}" type="number" step="any" value="${m[k] ?? ''}" ${S.canWrite ? '' : 'disabled'}></div>`;
+  return `<div class="stack"><p class="small muted" style="margin:0">Estos datos alimentan la vista Indicadores. Deja vacío lo que no sepas: el indicador mostrará «sin dato».${i.ejemplo ? ' <b>Esta iniciativa es de ejemplo: sus valores son ficticios.</b>' : ''}</p>
+    ${METRIC_GROUPS.map(([g, fs]) => `<div class="panel stack" style="gap:10px"><span class="lbl">${esc(g)}</span><div class="grid2">${fs.map(fld).join('')}</div></div>`).join('')}</div>`;
+}
+async function saveMetrics() {
+  const i = initById(S.drawer.id); if (!i || !guardWrite()) return;
+  const m = {}; document.querySelectorAll('[data-m]').forEach(el => { const v = el.value.trim(); if (v === '') return; m[el.dataset.m] = el.tagName === 'SELECT' ? v : +v; });
+  if (await write(db.doc('initiatives/' + i.id).update({ metrics: m, updatedAt: Date.now() }), 'Datos de indicadores guardados')) { S.drawerDirty = false; renderDrawer(); }
+}
+const TABS = [['resumen', 'Resumen'], ['descomposicion', 'Descomposición'], ['dependencias', 'Dependencias'], ['resultados', 'Resultados'], ['indicadores', 'Indicadores'], ['updates', 'Updates'], ['decisiones', 'Decisiones'], ['evaluar', 'Evaluación']];
 function tabLabel(k, l, i) {
   if (k === 'dependencias') { const n = depsOf(i).length + dependents(i).length; const bad = allDepIssues(i).length; return l + (n ? ` <span class="num small" style="color:${bad ? 'var(--bad)' : 'var(--muted)'}">${bad ? '⚠' : n}</span>` : ''); }
   if (k === 'decisiones') { const n = decisionsFor(i.id).length; return l + (n ? ` <span class="num small muted">${n}</span>` : ''); }
@@ -1392,8 +1426,9 @@ function renderDrawer() {
   const tab = S.drawer.tab;
   dr.innerHTML = `<div class="d-head"><div class="row"><span class="code">${esc(i.code)}</span>${methodChip(i.method)}${healthChip(i.health)}<span class="chip outline">${esc(i.stage)}</span>${exampleChip(i)}<span class="spacer"></span><button class="btn ghost" type="button" data-action="drawer-close" aria-label="Cerrar panel">Cerrar <kbd>Esc</kbd></button></div><h2>${esc(i.name)}</h2><div class="small muted">${esc(i.area)} · ${fmtMonY(i.start)} – ${fmtMonY(i.end)}</div></div>
   <div class="tabs" role="tablist">${TABS.map(([k, l]) => `<button type="button" role="tab" data-action="tab" data-tab="${k}" aria-selected="${tab === k}">${tabLabel(k, l, i)}</button>`).join('')}</div>
-  <div class="d-body">${({ resumen: tabResumen, descomposicion: tabDecomp, dependencias: tabDeps, resultados: tabKR, updates: tabUpdates, decisiones: tabDecisions, evaluar: tabEval })[tab](i)}</div>
+  <div class="d-body">${({ resumen: tabResumen, descomposicion: tabDecomp, dependencias: tabDeps, resultados: tabKR, indicadores: tabMetrics, updates: tabUpdates, decisiones: tabDecisions, evaluar: tabEval })[tab](i)}</div>
   ${tab === 'resumen' ? `<div class="d-foot"><button class="btn pri" type="button" data-action="save-init" ${S.canWrite ? '' : 'disabled'}>Guardar cambios</button>${S.drawerDirty ? '<span class="small muted">Cambios sin guardar</span>' : ''}<span class="spacer"></span><button class="btn danger ${S.confirmDel === i.id ? 'armed' : ''}" type="button" data-action="delete-init" ${S.canWrite ? '' : 'disabled'}>${S.confirmDel === i.id ? 'Confirmar: eliminar iniciativa y sus ítems' : 'Eliminar'}</button></div>` : ''}
+  ${tab === 'indicadores' ? `<div class="d-foot"><button class="btn pri" type="button" data-action="save-metrics" ${S.canWrite ? '' : 'disabled'}>Guardar datos de indicadores</button></div>` : ''}
   ${tab === 'resultados' ? `<div class="d-foot"><button class="btn pri" type="button" data-action="save-krs" ${S.canWrite ? '' : 'disabled'}>Guardar resultados</button><button class="btn" type="button" data-action="add-kr">Agregar resultado clave</button></div>` : ''}`;
   const b = dr.querySelector('.d-body'); if (b) b.scrollTop = sc;
 }
@@ -1933,6 +1968,7 @@ document.addEventListener('click', e => {
     case 'add-kr': if (S.krDraft) { S.krDraft.list.push({ name: '', baseline: '', current: '', target: '', unit: '' }); S.drawerDirty = true; renderDrawer(); const n = S.krDraft.list.length - 1; const f = $(`#kr-${n}-name`); if (f) f.focus(); } break;
     case 'del-kr': if (S.krDraft) { S.krDraft.list.splice(+a.dataset.n, 1); S.drawerDirty = true; renderDrawer(); } break;
     case 'save-krs': saveKRs(); break;
+    case 'save-metrics': saveMetrics(); break;
     case 'save-vote': saveVote(); break;
     case 'agree': setAgreed(false); break;
     case 'unagree': setAgreed(true); break;

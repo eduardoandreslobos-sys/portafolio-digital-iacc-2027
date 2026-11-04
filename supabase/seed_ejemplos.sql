@@ -24,3 +24,26 @@ insert into public.docs (collection, id, data) values
 on conflict (collection, id) do nothing;
 
 select collection, count(*) from public.docs group by collection order by collection;
+
+-- Datos ficticios de indicadores para las iniciativas de ejemplo (se quitan con «Quitar ejemplos»)
+update public.docs set data = data || jsonb_build_object('metrics', v.m::jsonb, 'updatedAt', (extract(epoch from now())*1000)::bigint)
+from (values
+ ('ex01','{"presupuesto":180000000,"presupuestoFecha":120000000,"gastoReal":131000000,"inversion":"transform","gastoIA":4200000,"resultadosIA":1400,"costoDemora":9000000,"despliegues":12,"desplieguesFallidos":1,"desplieguesRetrabajo":2,"sloObjetivo":99.5,"sloReal":99.7,"csat":4.1,"csatMeta":4.6,"ces":3.2,"retencion":82,"adopcion":68,"dxi":71,"enps":22,"usaIA":"si","evaluacionImpacto":"si"}'),
+ ('ex02','{"presupuesto":420000000,"presupuestoFecha":260000000,"gastoReal":284000000,"inversion":"run","costoDemora":6000000,"despliegues":8,"desplieguesFallidos":2,"desplieguesRetrabajo":1,"sloObjetivo":99.9,"sloReal":99.6,"csat":3.6,"csatMeta":4.4,"ces":4.1,"retencion":76,"adopcion":91,"dxi":58,"enps":-5,"usaIA":"no"}'),
+ ('ex03','{"presupuesto":95000000,"presupuestoFecha":40000000,"gastoReal":37000000,"inversion":"transform","gastoIA":6800000,"resultadosIA":3100,"costoDemora":4000000,"despliegues":20,"desplieguesFallidos":3,"desplieguesRetrabajo":4,"sloObjetivo":99.0,"sloReal":99.2,"csat":4.3,"csatMeta":4.7,"ces":2.6,"retencion":79,"adopcion":44,"dxi":76,"enps":35,"usaIA":"si","evaluacionImpacto":"no"}'),
+ ('ex04','{"presupuesto":70000000,"presupuestoFecha":45000000,"gastoReal":46000000,"inversion":"grow","gastoIA":2100000,"resultadosIA":260,"costoDemora":7500000,"despliegues":10,"desplieguesFallidos":1,"desplieguesRetrabajo":1,"sloObjetivo":99.5,"sloReal":99.8,"csat":4.0,"csatMeta":4.5,"ces":3.0,"retencion":84,"adopcion":73,"dxi":69,"enps":18,"usaIA":"si","evaluacionImpacto":"si"}'),
+ ('ex05','{"presupuesto":50000000,"presupuestoFecha":15000000,"gastoReal":13000000,"inversion":"run","costoDemora":2000000,"despliegues":4,"desplieguesFallidos":0,"desplieguesRetrabajo":0,"sloObjetivo":99.0,"sloReal":99.4,"csat":3.9,"csatMeta":4.3,"ces":3.4,"adopcion":55,"dxi":64,"enps":10,"usaIA":"no"}'),
+ ('ex06','{"presupuesto":60000000,"presupuestoFecha":30000000,"gastoReal":34000000,"inversion":"run","costoDemora":3000000,"despliegues":6,"desplieguesFallidos":1,"desplieguesRetrabajo":1,"sloObjetivo":99.9,"sloReal":99.95,"csat":3.8,"csatMeta":4.2,"ces":3.6,"adopcion":62,"dxi":66,"enps":12,"usaIA":"no"}')
+) as v(id, m)
+where docs.collection = 'initiatives' and docs.id = v.id;
+-- Asignaciones de ítems: personas y agentes (siempre con persona responsable)
+update public.docs set data = data || v.p::jsonb
+from (values
+ ('exi01','{"assignee":"a:Claude Code","dri":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5"}'),
+ ('exi02','{"assignee":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5"}'),
+ ('exi03','{"assignee":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5"}'),
+ ('exi04','{"assignee":"a:Codex","dri":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5"}'),
+ ('exi08','{"assignee":"a:GitHub Copilot","dri":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5","aiDraft":true}'),
+ ('exi09','{"assignee":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5"}')
+) as v(id, p)
+where docs.collection = 'items' and docs.id = v.id;
