@@ -47,3 +47,8 @@ from (values
  ('exi09','{"assignee":"u:0467588e-58cc-4efe-aa9d-bf1b8fdf1ca5"}')
 ) as v(id, p)
 where docs.collection = 'items' and docs.id = v.id;
+-- Avance ficticio de resultados clave de las iniciativas de ejemplo
+update public.docs set data = jsonb_set(data, '{krs}', '[{"baseline": "40", "current": "62", "name": "Matrículas completadas sin asistencia", "target": "85", "unit": "%"}, {"baseline": "3", "current": "1.8", "name": "Tiempo medio de matrícula", "target": "0.5", "unit": " días"}]'::jsonb) where collection='initiatives' and id='ex01';
+update public.docs set data = jsonb_set(data, '{krs}', '[{"baseline": "0", "current": "34", "name": "Asignaturas migradas", "target": "100", "unit": "%"}]'::jsonb) where collection='initiatives' and id='ex02';
+update public.docs set data = jsonb_set(data, '{krs}', '[{"baseline": "68", "current": "70", "name": "Aprobación en asignaturas críticas de 1er año", "target": "75", "unit": "%"}]'::jsonb) where collection='initiatives' and id='ex03';
+update public.docs set data = jsonb_set(data, '{krs}', '[{"baseline": "20", "current": "41", "name": "Estudiantes en riesgo contactados en menos de 7 días", "target": "80", "unit": "%"}]'::jsonb) where collection='initiatives' and id='ex04';
