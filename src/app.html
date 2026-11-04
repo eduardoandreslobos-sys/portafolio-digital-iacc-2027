@@ -409,71 +409,68 @@ tr.capline td{padding:0;border-bottom:0}
   .drawer{animation:slide .18s ease-out}
   @keyframes slide{from{transform:translateX(24px)}to{transform:none}}
 }
-/* Indicadores v3 */
-.lx3{position:relative;display:grid;grid-template-columns:minmax(360px,.95fr) 1.25fr;gap:28px;align-items:center;padding:26px 30px;border-radius:22px;color:#e6f0eb;overflow:hidden;margin-bottom:16px;
-  background:radial-gradient(900px 520px at 18% 10%,#173a31 0%,rgba(23,58,49,0) 60%),radial-gradient(700px 500px at 95% 100%,#1b2b3a 0%,rgba(27,43,58,0) 60%),#0a1311;box-shadow:0 30px 80px -40px rgba(4,12,10,.8)}
-.lx3::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at 30% 40%,#000 0%,transparent 70%)}
-.lx3>*{position:relative;z-index:1}
-.lxr{width:100%;max-width:520px;display:block;margin:0 auto;overflow:visible}
-.lxr-core{fill:rgba(255,255,255,.03);stroke:rgba(255,255,255,.07)}
-.lxr-seg{cursor:pointer;outline:none}.lxr-seg .trk{fill:rgba(255,255,255,.035);stroke:rgba(255,255,255,.05)}
-.lxr-seg .val{stroke:rgba(255,255,255,.18);stroke-width:1;transition:filter .2s}
-.lxr-seg:hover .val,.lxr-seg:focus-visible .val{filter:brightness(1.18) drop-shadow(0 0 10px rgba(52,211,153,.35))}
-.lxr-seg.sel .trk{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.45);stroke-width:1.2}
-.lxr-lab{font-size:12.5px;fill:#9fb3ab;font-weight:500}.lxr-lab.sel{fill:#fff;font-weight:650}.lxr-sc{fill:#e6f0eb;font-weight:650;font-variant-numeric:tabular-nums}
-.lxr-big{font-size:64px;font-weight:650;fill:#fff;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.lxr-sub{font-size:12px;fill:#8fa39b;letter-spacing:.08em;text-transform:uppercase}
-.lx3-eye{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#7fd8b0;font-weight:600}
-.lx3-h{font-size:27px;line-height:1.18;letter-spacing:-.025em;font-weight:620;margin:8px 0 18px;color:#fff;text-wrap:balance}
-.lx3-insl{display:flex;flex-direction:column;gap:10px}
-.lx3-ins{all:unset;box-sizing:border-box;display:grid;grid-template-columns:76px 1fr;gap:16px;align-items:center;padding:14px 16px;border-radius:14px;cursor:pointer;
-  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px);transition:border-color .2s,transform .2s,background .2s}
-.lx3-ins:hover,.lx3-ins:focus-visible{border-color:rgba(255,255,255,.22);transform:translateY(-1px)}.lx3-ins.sel{border-color:rgba(127,216,176,.55);background:linear-gradient(180deg,rgba(52,211,153,.12),rgba(255,255,255,.02))}
-.lx3-ins-n{font-size:40px;font-weight:650;letter-spacing:-.04em;text-align:center;font-variant-numeric:tabular-nums;line-height:1}
-.lx3-ins.bad .lx3-ins-n{color:#ff8a7d}.lx3-ins.warn .lx3-ins-n{color:#f8c46a}.lx3-ins.ok .lx3-ins-n{color:#5ee2ad}
-.lx3-ins-b{display:flex;flex-direction:column;gap:3px}.lx3-ins-k{font-size:11px;color:#8fa39b;letter-spacing:.08em;text-transform:uppercase;font-weight:600}.lx3-ins-t{font-size:14px;line-height:1.42;color:#dce8e2}
-.lx3-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:12.5px;color:#8fa39b}.lx3-meta b{color:#fff;font-weight:650;margin-right:3px}
-.lx3-focus{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px 26px;margin-bottom:16px}
-.lx3-focus>header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.lx3-tag{font-size:12px;font-weight:650;padding:4px 10px;border-radius:99px;background:var(--surface-2)}
-.lx3-tag.ok{background:color-mix(in oklch,#34d399 18%,var(--surface));color:oklch(45% .12 160)}.lx3-tag.warn{background:color-mix(in oklch,#f5b84a 22%,var(--surface));color:oklch(48% .12 70)}.lx3-tag.bad{background:color-mix(in oklch,#ff6b5b 18%,var(--surface));color:oklch(50% .17 28)}
-.lx3-fg{display:grid;grid-template-columns:1fr 1.05fr;gap:34px}
-.lx3-fg h2{font-size:24px;line-height:1.22;letter-spacing:-.025em;font-weight:620;margin:6px 0 8px;text-wrap:balance}
-.lx3-fnum{display:flex;align-items:baseline;gap:4px;margin-bottom:12px}.lx3-fnum b{font-size:58px;font-weight:650;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}.lx3-fnum span{color:var(--muted)}
-.lx3-ks{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-.lx3-k{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:linear-gradient(180deg,var(--surface),var(--surface-2))}
-.lx3-kn{font-size:12.5px;color:var(--muted);line-height:1.3}.lx3-k b{font-size:22px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.lx3-k.off b{font-size:14px;color:var(--muted);font-style:italic;font-weight:500}
-.lx3-kb{height:5px;border-radius:99px;background:var(--line);overflow:hidden}.lx3-kb i{display:block;height:100%;border-radius:99px}
-.lx3-kb i.ok{background:linear-gradient(90deg,#10b981,#34d399)}.lx3-kb i.warn{background:linear-gradient(90deg,#f59e0b,#f5b84a)}.lx3-kb i.bad{background:linear-gradient(90deg,#ef4444,#ff6b5b)}
-.lx3-kc{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
-.lx3-fr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0 10px;flex-wrap:wrap}
+/* Indicadores v3 (tokens del sistema: superficies, estado = color + forma + texto) */
+.lx3,.lx3-focus,.lx3-map{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;margin-bottom:16px}
+.lx3{display:grid;grid-template-columns:minmax(320px,.9fr) 1.3fr;gap:24px;align-items:center;padding:18px 22px}
+.lxr{width:100%;max-width:470px;display:block;margin:0 auto;overflow:visible}
+.lxr-core{fill:var(--bg);stroke:var(--line-soft)}
+.lxr-seg{cursor:pointer;outline:none}.lxr-seg .trk{fill:var(--surface-2);stroke:none}
+.lxr-seg .val{stroke:var(--surface);stroke-width:1;transition:opacity .15s}
+.lxr-seg .val.t-ok{fill:var(--ok)}.lxr-seg .val.t-warn{fill:var(--warn)}.lxr-seg .val.t-bad{fill:var(--bad)}.lxr-seg .val.t-none{fill:none;stroke:var(--line)}
+.lxr-seg:hover .val,.lxr-seg:focus-visible .val{opacity:.8}
+.lxr-seg.sel .trk{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.lxr-lab{font:500 12px var(--f-body);fill:var(--muted)}.lxr-lab.sel{fill:var(--fg);font-weight:700}.lxr-sc{fill:var(--fg);font-family:var(--f-mono);font-weight:500}
+.lxr-big{font:700 56px var(--f-display);fill:var(--fg);letter-spacing:-.03em}.lxr-sub{font:600 10.5px var(--f-body);fill:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.lx3-h{font-size:21px;line-height:1.25;font-weight:700;margin:6px 0 14px}
+.lx3-insl{display:flex;flex-direction:column;gap:8px}
+.lx3-ins{all:unset;box-sizing:border-box;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:10px 14px;border-radius:10px;cursor:pointer;border:1px solid var(--line-soft);background:var(--surface);transition:border-color .15s,background .15s}
+.lx3-ins:hover{border-color:var(--muted)}.lx3-ins:focus-visible{outline:2px solid var(--accent)}
+.lx3-ins.sel{border-color:var(--accent);background:var(--accent-soft)}
+.lx3-ins-n{font:700 30px/1 var(--f-display);text-align:center;font-variant-numeric:tabular-nums}
+.lx3-ins.bad .lx3-ins-n{color:var(--bad)}.lx3-ins.warn .lx3-ins-n{color:var(--warn)}.lx3-ins.ok .lx3-ins-n{color:var(--ok)}
+.lx3-ins-b{display:flex;flex-direction:column;gap:4px;align-items:flex-start}.lx3-ins-t{font-size:13px;line-height:1.45;color:var(--fg)}
+.lx3-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--muted)}.lx3-meta b{color:var(--fg);font-family:var(--f-mono);font-weight:500;margin-right:3px}
+.lx3-focus{padding:18px 22px}
+.lx3-focus>header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.lx3-fg{display:grid;grid-template-columns:1fr 1.05fr;gap:28px}
+.lx3-fg h2{font-size:19px;line-height:1.3;font-weight:700;margin:6px 0 6px}
+.lx3-fnum{display:flex;align-items:baseline;gap:4px;margin-bottom:12px}.lx3-fnum b{font:700 44px/1 var(--f-display);font-variant-numeric:tabular-nums}.lx3-fnum span{color:var(--muted)}
+.lx3-fnum.ok b{color:var(--ok)}.lx3-fnum.warn b{color:var(--warn)}.lx3-fnum.bad b{color:var(--bad)}
+.lx3-ks{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.lx3-k{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:5px}
+.lx3-k.off{border-style:dashed}
+.lx3-kn{font-size:12.5px;color:var(--muted);line-height:1.3}.lx3-k b{font:700 22px/1.1 var(--f-display);font-variant-numeric:tabular-nums}.lx3-k.off b{font:italic 500 13px var(--f-body);color:var(--muted)}
+.lx3-kb{height:4px;border-radius:99px;background:var(--surface-2);overflow:hidden}.lx3-kb i{display:block;height:100%;border-radius:99px}
+.lx3-kb i.ok{background:var(--ok)}.lx3-kb i.warn{background:var(--warn)}.lx3-kb i.bad{background:var(--bad)}
+.lx3-kc{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.lx3-fr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0 8px;flex-wrap:wrap}
 .lx3-lol{display:flex;flex-direction:column}
-.lx3-axis{display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr .6fr;margin-left:40%;margin-right:44px;font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}.lx3-axis .meta{color:var(--fg);font-weight:600}
-.lx3-li{all:unset;box-sizing:border-box;display:grid;grid-template-columns:40% 1fr 40px;gap:14px;align-items:center;padding:11px 8px;border-radius:12px;cursor:pointer;border-bottom:1px solid var(--line)}
-.lx3-li:hover,.lx3-li:focus-visible{background:var(--surface-2)}
-.lx3-li.worst{background:color-mix(in oklch,#ff6b5b 9%,var(--surface));border-color:transparent;box-shadow:0 0 0 1px color-mix(in oklch,#ff6b5b 30%,transparent) inset}
-.lx3-li-t{display:flex;flex-direction:column;min-width:0;font-size:13px}.lx3-li-t .code{font-size:11px}.lx3-li-t .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lx3-li-v{position:relative;height:22px}
-.lx3-li-v .lx3-rail{position:absolute;left:0;right:0;top:10px;height:2px;background:var(--line);border-radius:2px}
-.lx3-li-v .lx3-goal{position:absolute;left:75%;top:3px;width:2px;height:16px;background:var(--fg);opacity:.35;border-radius:2px}
-.lx3-li-v .lx3-stem{position:absolute;left:0;top:10px;height:2px;border-radius:2px}
-.lx3-li-v .lx3-dot{position:absolute;top:4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;box-shadow:0 0 0 4px var(--surface),0 2px 8px rgba(0,0,0,.18)}
-.lx3-li-v .ok{background:#10b981}.lx3-li-v .warn{background:#f59e0b}.lx3-li-v .bad{background:#ef4444}
-.lx3-li b{text-align:right;font-size:15px;font-weight:650;font-variant-numeric:tabular-nums}
-.lx3-map{border-radius:22px;overflow:hidden;color:#e6f0eb;background:radial-gradient(900px 500px at 50% 0%,#122a24 0%,#0a1311 70%);padding:22px 24px 18px}
+.lx3-axis{position:relative;height:16px;margin-left:calc(40% + 14px);margin-right:54px;font:500 10.5px var(--f-mono);color:var(--muted)}
+.lx3-axis span{position:absolute;transform:translateX(-50%)}.lx3-axis .meta{color:var(--fg)}
+.lx3-li{all:unset;box-sizing:border-box;display:grid;grid-template-columns:40% 1fr 40px;gap:14px;align-items:center;padding:9px 8px;border-radius:8px;cursor:pointer;border-bottom:1px solid var(--line-soft)}
+.lx3-li:hover{background:var(--surface-2)}.lx3-li:focus-visible{outline:2px solid var(--accent)}
+.lx3-li.worst{background:var(--bad-soft);border-bottom-color:transparent}
+.lx3-li-t{display:flex;flex-direction:column;min-width:0;font-size:13px}.lx3-li-t .code{font-size:11px;color:var(--muted)}.lx3-li-t .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lx3-li-v{position:relative;height:20px}
+.lx3-li-v .lx3-rail{position:absolute;left:0;right:0;top:9px;height:2px;background:var(--line-soft);border-radius:2px}
+.lx3-li-v .lx3-goal{position:absolute;left:75%;top:2px;width:2px;height:16px;background:var(--muted);border-radius:2px}
+.lx3-li-v .lx3-stem{position:absolute;left:0;top:9px;height:2px;border-radius:2px}
+.lx3-li-v .lx3-dot{position:absolute;top:4px;width:12px;height:12px;margin-left:-6px;border-radius:50%;box-shadow:0 0 0 3px var(--surface)}
+.lx3-li-v .lx3-dot.warn{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%);box-shadow:none}.lx3-li-v .lx3-dot.bad{border-radius:2px}
+.lx3-li-v .ok{background:var(--ok)}.lx3-li-v .warn{background:var(--warn)}.lx3-li-v .bad{background:var(--bad)}
+.lx3-li b{text-align:right;font:500 13.5px var(--f-mono)}
+.lx3-map{padding:16px 20px 12px}
 .lx3-maph{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.lx3-map h2{font-size:20px;margin:4px 0 4px;color:#fff;letter-spacing:-.02em}.lx3-map p{margin:0;font-size:13px;color:#9fb3ab}
-.lx3-seg{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:3px}
-.lx3-seg button{all:unset;cursor:pointer;font-size:12.5px;padding:6px 12px;border-radius:7px;color:#c9d8d1}.lx3-seg button[aria-pressed="true"]{background:#e6f0eb;color:#0a1311;font-weight:600}
-.lx3-3d{position:relative;height:520px;margin-top:8px}
+.lx3-map h2{font-size:17px;margin:4px 0 2px}.lx3-map p{margin:0;font-size:13px;color:var(--muted)}
+.lx3-3d{position:relative;height:480px;margin-top:6px;border-radius:8px;background:var(--bg)}
 .lx3-3d canvas{display:block;touch-action:none}
 .lx3-labels{position:absolute;inset:0;pointer-events:none}
-.lx3-l3{font-size:12px;font-weight:600;color:#9fb3ab;white-space:nowrap;text-shadow:0 1px 6px rgba(0,0,0,.6);transition:color .2s}
-.lx3-l3.lx3-lr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px}.lx3-l3.sel{color:#fff;font-weight:700}
-.lx3-tip{position:absolute;pointer-events:none;z-index:3;background:rgba(10,19,17,.82);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:160px;max-width:260px;font-size:12px;color:#c9d8d1;box-shadow:0 12px 40px rgba(0,0,0,.4)}
-.lx3-tip[hidden]{display:none}.lx3-tip .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7fd8b0;font-weight:600}.lx3-tip b{font-size:24px;color:#fff;font-weight:650;letter-spacing:-.02em}.lx3-tip small{font-size:12px;color:#8fa39b;margin-left:2px}
-.lx3-hint{position:absolute;left:4px;bottom:2px;font-size:11.5px;color:#7d918a}
-.lx3-table{margin-top:12px}.lx3-table th{color:#9fb3ab}.lx3-table th.sel{color:#fff}
-.lx3-table td.ok button{background:rgba(52,211,153,.18);color:#d9fbe9}.lx3-table td.warn button{background:rgba(245,184,74,.2);color:#ffeac4}.lx3-table td.bad button{background:rgba(255,107,91,.2);color:#ffd9d4}.lx3-table td.none button{background:rgba(255,255,255,.04);color:#6f827b}
+.lx3-l3{font:500 12px var(--f-body);color:var(--muted);white-space:nowrap}
+.lx3-l3.lx3-lr{font:500 11px var(--f-mono)}.lx3-l3.sel{color:var(--fg);font-weight:700}
+.lx3-tip{position:absolute;pointer-events:none;z-index:3;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:160px;max-width:260px;font-size:12.5px}
+.lx3-tip[hidden]{display:none}.lx3-tip .k{font:600 10.5px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.lx3-tip b{font:700 22px var(--f-display)}.lx3-tip small{font-size:12px;color:var(--muted);margin-left:2px}.lx3-tip span:last-child{color:var(--muted)}
+.lx3-hint{position:absolute;left:10px;bottom:8px;font-size:11.5px;color:var(--muted)}
+.lx3-table{margin-top:10px}
 @media (max-width:1100px){.lx3,.lx3-fg{grid-template-columns:1fr}}
 
 /* Indicadores v2 */
@@ -1115,7 +1112,8 @@ function indModel() {
 }
 /* ---------- Indicadores v3: radial de 12 dimensiones, insights, foco con piruletas y mapa 3D moderno ---------- */
 const T3 = 'https://cdn.jsdelivr.net/npm/three@0.170.0';
-const LX_TONE = { ok: '#34d399', warn: '#f5b84a', bad: '#ff6b5b', none: '#3b4a46' };
+const LX_CHIP = { ok: ['h-en_curso', 'En meta'], warn: ['h-en_riesgo', 'Atención'], bad: ['h-fuera', 'Crítico'], none: ['outline', 'Sin dato'] };
+const lxChip = (s, txt) => { const [c, l] = LX_CHIP[indTone(s)]; return `<span class="chip ${c}"><span class="dot"></span>${esc(txt || l)}</span>`; };
 function lxArc(cx, cy, r0, r1, a0, a1) {
   const p = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)]; const lg = a1 - a0 > Math.PI ? 1 : 0;
   const [x0, y0] = p(r1, a0), [x1, y1] = p(r1, a1), [x2, y2] = p(r0, a1), [x3, y3] = p(r0, a0);
@@ -1124,13 +1122,12 @@ function lxArc(cx, cy, r0, r1, a0, a1) {
 function lxRadial(M) {
   const W = 440, c = W / 2, r0 = 92, rM = 176, n = M.dims.length, gap = .035;
   let defs = '', segs = '', labs = '';
-  ['ok', 'warn', 'bad'].forEach(t => { defs += `<radialGradient id="lxg-${t}" cx="${c}" cy="${c}" r="${rM}" gradientUnits="userSpaceOnUse"><stop offset="${r0 / rM}" stop-color="${LX_TONE[t]}" stop-opacity=".35"/><stop offset="1" stop-color="${LX_TONE[t]}"/></radialGradient>`; });
   M.dims.forEach((d, k) => {
     const a0 = -Math.PI / 2 + k / n * 2 * Math.PI + gap, a1 = -Math.PI / 2 + (k + 1) / n * 2 * Math.PI - gap, am = (a0 + a1) / 2;
     const s = d.score; const t = indTone(s); const r1 = s == null ? r0 + 6 : r0 + 8 + s * (rM - r0 - 8); const sel = d.k === IND.dim;
     segs += `<g class="lxr-seg${sel ? ' sel' : ''}" data-action="ind-dim" data-k="${d.k}" tabindex="0" role="button" aria-label="${esc(d.t)}: ${s == null ? 'sin dato' : Math.round(s * 100)}">
       <path class="trk" d="${lxArc(c, c, r0, rM, a0, a1)}"/>
-      <path class="val" d="${lxArc(c, c, r0, r1, a0, a1)}" fill="${s == null ? 'transparent' : `url(#lxg-${t})`}" ${s == null ? 'stroke-dasharray="3 3"' : ''} data-r1="${r1.toFixed(1)}" data-a0="${a0}" data-a1="${a1}"/></g>`;
+      <path class="val t-${t}" d="${lxArc(c, c, r0, r1, a0, a1)}" ${s == null ? 'stroke-dasharray="3 3"' : ''} data-r1="${r1.toFixed(1)}" data-a0="${a0}" data-a1="${a1}"/></g>`;
     const lr = rM + 16, lx = c + lr * Math.cos(am), ly = c + lr * Math.sin(am); const anc = Math.abs(Math.cos(am)) < .25 ? 'middle' : Math.cos(am) > 0 ? 'start' : 'end';
     labs += `<text class="lxr-lab${sel ? ' sel' : ''}" x="${lx.toFixed(1)}" y="${(ly + 4).toFixed(1)}" text-anchor="${anc}">${esc(DIM_ABBR[d.k])}<tspan class="lxr-sc" dx="5">${s == null ? '—' : Math.round(s * 100)}</tspan></text>`;
   });
@@ -1148,28 +1145,28 @@ function viewIndicators() {
   const pc = s => s == null ? '—' : Math.round(s * 100);
   const ins = M.weak.slice(0, 3).map((d, k) => `<button type="button" class="lx3-ins ${indTone(d.score)}${d.k === IND.dim ? ' sel' : ''}" data-action="ind-dim" data-k="${d.k}">
       <span class="lx3-ins-n" data-count="${pc(d.score)}">${pc(d.score)}</span>
-      <span class="lx3-ins-b"><span class="lx3-ins-k">${String(k + 1).padStart(2, '0')} · ${esc(d.t)}</span><span class="lx3-ins-t">${esc(d.headline.replace(/^.+? — /, '').replace(/^./, c => c.toUpperCase()))}</span></span></button>`).join('');
+      <span class="lx3-ins-b">${lxChip(d.score, d.t)}<span class="lx3-ins-t">${esc(d.headline.replace(/^.+? — /, '').replace(/^./, c => c.toUpperCase()))}</span></span></button>`).join('');
   const hero = `<section class="lx3">
     <div class="lx3-l">${lxRadial(M)}</div>
-    <div class="lx3-r"><span class="lx3-eye">Lo que el comité debe saber hoy</span>
+    <div class="lx3-r"><span class="eyebrow">Lo que el comité debe saber hoy</span>
       <h2 class="lx3-h">${M.weak.length ? `${esc(M.weak[0].t)} y ${esc((M.weak[1] || M.weak[0]).t).toLowerCase()} frenan el portafolio; ${esc(M.strong[0].t).toLowerCase()} lo sostiene.` : 'Agrega datos para leer el portafolio.'}</h2>
       <div class="lx3-insl">${ins}</div>
       <div class="lx3-meta"><span><b>${M.x.act.length}</b> iniciativas activas</span><span><b>${M.dims.filter(d => d.live).length}/12</b> dimensiones con datos</span><span><b>${M.dims.reduce((a, d) => a + d.live, 0)}</b> indicadores en vivo</span></div></div></section>`;
   // Foco
   const kpis = D.rows.map(r => `<div class="lx3-k ${r.r ? '' : 'off'}"><span class="lx3-kn">${esc(r.n)}</span><b>${r.r ? esc(r.txt) : 'sin dato'}</b>
       ${r.s != null ? `<span class="lx3-kb"><i class="${indTone(r.s)}" style="width:${r.s * 100}%"></i></span>` : `<span class="lx3-kc">${r.r ? 'Contexto' : 'Falta registrar'}</span>`}</div>`).join('');
-  const lol = D.byInit.length ? `<div class="lx3-lol"><div class="lx3-axis"><span>0</span><span>25</span><span>50</span><span class="meta">75 · meta</span><span>100</span></div>${D.byInit.map((z, k) => `<button type="button" class="lx3-li ${k === 0 && z.s < .75 ? 'worst' : ''}" data-action="ind-open-init" data-id="${esc(z.i.id)}">
+  const lol = D.byInit.length ? `<div class="lx3-lol"><div class="lx3-axis"><span style="left:0">0</span><span style="left:25%">25</span><span style="left:50%">50</span><span class="meta" style="left:75%">meta 75</span><span style="left:100%">100</span></div>${D.byInit.map((z, k) => `<button type="button" class="lx3-li ${k === 0 && z.s < .75 ? 'worst' : ''}" data-action="ind-open-init" data-id="${esc(z.i.id)}">
       <span class="lx3-li-t"><span class="code">${esc(z.i.code)}</span><span class="nm">${esc(z.i.name)}</span></span>
       <span class="lx3-li-v"><span class="lx3-rail"></span><span class="lx3-goal"></span><span class="lx3-stem ${indTone(z.s)}" style="width:${z.s * 100}%"></span><span class="lx3-dot ${indTone(z.s)}" style="left:${z.s * 100}%"></span></span><b>${pc(z.s)}</b></button>`).join('')}</div>`
     : '<p class="muted small">Ninguna iniciativa tiene datos para esta dimensión todavía.</p>';
   const focus = `<section class="lx3-focus" id="lx-focus">
-    <header><span class="lx3-tag ${indTone(D.score)}">${String(di + 1).padStart(2, '0')} · ${esc(D.t)}</span><span class="muted small">${esc(D.d)}</span></header>
-    <div class="lx3-fg"><div><h2>${esc(D.headline)}</h2><div class="lx3-fnum"><b data-count="${pc(D.score)}">${pc(D.score)}</b><span>/100</span></div><div class="lx3-ks">${kpis}</div>
+    <header>${lxChip(D.score, `${String(di + 1).padStart(2, '0')} · ${D.t}`)}<span class="muted small">${esc(D.d)}</span></header>
+    <div class="lx3-fg"><div><h2>${esc(D.headline)}</h2><div class="lx3-fnum ${indTone(D.score)}"><b data-count="${pc(D.score)}">${pc(D.score)}</b><span>/100</span></div><div class="lx3-ks">${kpis}</div>
       <details class="lx-how"${IND.how ? ' open' : ''}><summary data-action="ind-how">¿Cómo se calcula y quién lo usa?</summary>${D.rows.map(r => `<div><b>${esc(r.n)}</b><span>${esc(r.f)}</span><span class="muted">${esc(r.src)} · ${esc(r.fr)}</span></div>`).join('')}</details></div>
     <div><div class="lx3-fr"><span class="eyebrow">Por iniciativa</span>${D.worst && D.worst.s < .75 ? `<button type="button" class="btn sm" data-action="new-dec" data-init="${esc(D.worst.i.id)}">Registrar decisión sobre ${esc(D.worst.i.code)}</button>` : ''}</div>${lol}</div></div></section>`;
   const cells = M.x.act.map(i => `<tr><th scope="row"><span class="code">${esc(i.code)}</span> ${esc(i.name)}</th>${M.dims.map(d => { const s = M.per.get(i.id)[d.k]; return `<td class="${indTone(s)}${d.k === IND.dim ? ' sel' : ''}"><button type="button" data-action="ind-dim" data-k="${d.k}" title="${esc(i.code)} · ${esc(d.t)}: ${s == null ? 'sin dato' : pc(s) + '/100'}">${s == null ? '·' : pc(s)}</button></td>`; }).join('')}</tr>`).join('');
-  const field = `<section class="lx3-map"><div class="lx3-maph"><div><span class="lx3-eye">Mapa del portafolio</span><h2>Iniciativas × dimensiones</h2><p>Altura y color = puntaje. Lo bajo y rojo es lo que hay que mirar. La dimensión elegida brilla.</p></div>
-      <div class="lx3-seg"><button type="button" data-action="ind-mode" data-m="3d" aria-pressed="${IND.mode !== 'tabla'}">3D</button><button type="button" data-action="ind-mode" data-m="tabla" aria-pressed="${IND.mode === 'tabla'}">Tabla</button></div></div>
+  const field = `<section class="lx3-map"><div class="lx3-maph"><div><span class="eyebrow">Mapa del portafolio</span><h2>Iniciativas × dimensiones</h2><p>Altura y color = puntaje. Lo bajo y rojo es lo que hay que mirar. La dimensión elegida se destaca.</p></div>
+      <div class="seg-filter"><button type="button" data-action="ind-mode" data-m="3d" aria-pressed="${IND.mode !== 'tabla'}">3D</button><button type="button" data-action="ind-mode" data-m="tabla" aria-pressed="${IND.mode === 'tabla'}">Tabla</button></div></div>
     ${IND.mode === 'tabla' ? '' : `<div class="lx3-3d" id="lx-3d"><div class="lx3-tip" id="ind-tip" hidden></div><span class="lx3-hint">Arrastra para orbitar · rueda para acercar · clic en una barra para abrir su dimensión</span></div>`}
     <div class="lx-table lx3-table"${IND.mode === 'tabla' ? '' : ' hidden'}><table><thead><tr><th></th>${M.dims.map(d => `<th scope="col" class="${d.k === IND.dim ? 'sel' : ''}">${esc(DIM_ABBR[d.k])}</th>`).join('')}</tr></thead><tbody>${cells}</tbody></table></div></section>`;
   const foot = `<p class="lx-foot small muted">No uses estos números para evaluar personas (ley de Goodhart). El % de trabajo hecho por IA es contexto, no meta. Catálogo basado en la investigación «KPI de portafolio digital 2026».${S.inits.some(i => i.ejemplo) ? ' <b>Las iniciativas de ejemplo tienen datos ficticios.</b>' : ''}</p>`;
@@ -1217,21 +1214,25 @@ async function mountIndicators() {
 function indField3(T, gsap, reduce) {
   const { THREE } = T;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 1;
   renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   const labels = new T.CSS2DRenderer(); labels.domElement.className = 'lx3-labels';
   const scene = new THREE.Scene(); const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new T.RoomEnvironment(), .04).texture;
-  scene.fog = new THREE.Fog(0x0a1311, 22, 44);
   const cam = new THREE.PerspectiveCamera(32, 1, .1, 200); cam.position.set(1.5, 9.5, 13);
   const controls = new T.OrbitControls(cam, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = .08; controls.enablePan = false;
   controls.minPolarAngle = .35; controls.maxPolarAngle = 1.22; controls.minDistance = 9; controls.maxDistance = 26; controls.target.set(0, .2, .6);
   const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(-6, 14, 8); key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
   Object.assign(key.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 40 }); key.shadow.radius = 6; key.shadow.bias = -.0004; scene.add(key);
-  const rim = new THREE.DirectionalLight(0x7dd3fc, .6); rim.position.set(8, 4, -10); scene.add(rim);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({ opacity: .45 })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
-  const grid = new THREE.GridHelper(40, 40, 0x24423a, 0x16262a); grid.material.transparent = true; grid.material.opacity = .55; grid.position.y = .002; scene.add(grid);
+  const rim = new THREE.DirectionalLight(0xffffff, .4); rim.position.set(8, 4, -10); scene.add(rim);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({ opacity: .16 })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+  const grid = new THREE.GridHelper(40, 40, 0x888888, 0x888888); grid.material.transparent = true; grid.material.opacity = .22; grid.position.y = .002; scene.add(grid);
   const world = new THREE.Group(); scene.add(world);
-  const COL = { ok: 0x34d399, warn: 0xf5b84a, bad: 0xff6b5b, none: 0x3b4a46 };
+  // Colores desde los tokens del sistema (OKLCH → sRGB vía canvas), así respeta tema claro/oscuro
+  const cv = document.createElement('canvas'); cv.width = cv.height = 1; const cx2 = cv.getContext('2d', { willReadFrequently: true });
+  const tok = (n) => { const v = getComputedStyle(document.documentElement).getPropertyValue(n).trim() || '#888'; cx2.clearRect(0, 0, 1, 1); cx2.fillStyle = '#888'; cx2.fillStyle = v; cx2.fillRect(0, 0, 1, 1); const [r, g, b] = cx2.getImageData(0, 0, 1, 1).data; return new THREE.Color().setRGB(r / 255, g / 255, b / 255, THREE.SRGBColorSpace); };
+  let COL = {}, dark = null;
+  const readTokens = () => { COL = { ok: tok('--ok'), warn: tok('--warn'), bad: tok('--bad'), none: tok('--line') }; dark = tok('--surface-2'); grid.material.color.copy(tok('--line')); };
+  readTokens();
   const geo = new T.RoundedBoxGeometry(.74, 1, .74, 5, .14); geo.translate(0, .5, 0);
   let host = null, bars = [], labs = [], sig = '', hover = null, down = null;
   const el = renderer.domElement;
@@ -1241,8 +1242,8 @@ function indField3(T, gsap, reduce) {
     const rows = M.x.act.length, cols = M.dims.length, g = 1.02, ox = -(cols - 1) * g / 2, oz = -(rows - 1) * g / 2;
     M.x.act.forEach((i, r) => M.dims.forEach((d, c) => {
       const s = M.per.get(i.id)[d.k]; const t = indTone(s);
-      const mat = new THREE.MeshPhysicalMaterial({ color: COL[t], roughness: s == null ? .9 : .32, metalness: .05, clearcoat: s == null ? 0 : .7, clearcoatRoughness: .25, transparent: s == null, opacity: s == null ? .55 : 1, emissive: COL[t], emissiveIntensity: .0 });
-      mat.userData.base = new THREE.Color(COL[t]);
+      const mat = new THREE.MeshPhysicalMaterial({ color: COL[t].clone(), roughness: s == null ? .9 : .32, metalness: .05, clearcoat: s == null ? 0 : .7, clearcoatRoughness: .25, transparent: s == null, opacity: s == null ? .55 : 1, emissive: COL[t].clone(), emissiveIntensity: .0 });
+      mat.userData.t = t;
       const b = new THREE.Mesh(geo, mat); b.castShadow = s != null; b.receiveShadow = true; const h = s == null ? .05 : .14 + s * 2.1;
       b.position.set(ox + c * g, 0, oz + r * g); b.scale.y = h; b.userData = { s, h, i, d, r, c }; world.add(b); bars.push(b);
     }));
@@ -1250,8 +1251,7 @@ function indField3(T, gsap, reduce) {
     M.x.act.forEach((i, r) => { const o = lab(i.code, 'lx3-lr'); o.position.set(ox - 1.5, 0, oz + r * g); world.add(o); labs.push(o); });
     if (gsap && !reduce) bars.forEach(b => { const h = b.userData.h; b.scale.y = .001; gsap.to(b.scale, { y: h, duration: 1.2, ease: 'elastic.out(1,.75)', delay: .15 + (b.userData.c * .045) + (b.userData.r * .03) }); });
   };
-  const dark = new THREE.Color(0x24312e);
-  const tint = dimK => { bars.forEach(b => { const on = b.userData.d.k === dimK; b.material.color.copy(b.material.userData.base); if (!on) b.material.color.lerp(dark, .8); b.material.emissiveIntensity = on && b.userData.s != null ? .22 : 0; b.material.envMapIntensity = on ? 1 : .3; b.material.clearcoat = on && b.userData.s != null ? .7 : .15; }); labs.forEach(o => o.element.classList.toggle('sel', o.userData.dim === dimK)); };
+  const tint = dimK => { bars.forEach(b => { const on = b.userData.d.k === dimK; const base = COL[b.material.userData.t]; b.material.color.copy(base); b.material.emissive.copy(base); if (!on) b.material.color.lerp(dark, .3); b.material.emissiveIntensity = on && b.userData.s != null ? .12 : 0; b.material.envMapIntensity = on ? 1 : .3; b.material.clearcoat = on && b.userData.s != null ? .7 : .15; }); labs.forEach(o => o.element.classList.toggle('sel', o.userData.dim === dimK)); };
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(-9, -9);
   el.addEventListener('pointermove', e => { const b = el.getBoundingClientRect(); ptr.set((e.clientX - b.left) / b.width * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1); const tip = $('#ind-tip'); if (tip) { tip.style.left = (e.clientX - b.left + 16) + 'px'; tip.style.top = (e.clientY - b.top + 14) + 'px'; } });
   el.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; });
@@ -1272,7 +1272,7 @@ function indField3(T, gsap, reduce) {
   })();
   return {
     mount(h) { if (host !== h) { host = h; h.appendChild(el); h.appendChild(labels.domElement); size(); } },
-    update(M, dimK) { const s = M.x.act.map(i => i.id + M.dims.map(d => M.per.get(i.id)[d.k]).join(',')).join('|'); if (s !== sig) { sig = s; build(M); } tint(dimK); }
+    update(M, dimK) { readTokens(); const s = M.x.act.map(i => i.id + M.dims.map(d => M.per.get(i.id)[d.k]).join(',')).join('|'); if (s !== sig) { sig = s; build(M); } tint(dimK); }
   };
 }
 
