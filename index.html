@@ -643,16 +643,49 @@ function showLogin(sb, msg) {
     clearInterval(timer); btn.disabled = false; btn.textContent = 'Enviar enlace de acceso'; m.textContent = 'No se pudo enviar el enlace: ' + error.message;
   });
 }
+function askName(sb, uid) {
+  const KEY = 'pd-name:' + uid;
+  let saved = ''; try { saved = localStorage.getItem(KEY) || ''; } catch {}
+  if (saved) return Promise.resolve(saved);
+  return new Promise(resolve => {
+    $('#nav').innerHTML = ''; $('#me').innerHTML = '';
+    $('#main').innerHTML = `<div class="empty" style="max-width:520px;margin:8vh auto 0;text-align:left;align-items:stretch"><div class="eyebrow">IACC · Vicerrectoría de Ecosistemas Digitales</div><h3 style="font-size:22px">Bienvenida al Portafolio Digital 2027</h3><p>Escribe tu nombre para que tus evaluaciones y decisiones queden firmadas. No necesitas correo ni contraseña.</p>
+      <form id="who" class="stack" style="gap:10px"><div class="fld"><label for="w-name">Tu nombre</label><input id="w-name" class="inp" required maxlength="60" autocomplete="name" placeholder="Nombre y apellido"></div>
+      <button class="btn pri" type="submit" style="align-self:flex-start">Entrar</button></form></div>`;
+    $('#w-name').focus();
+    $('#who').addEventListener('submit', e => {
+      e.preventDefault(); const name = $('#w-name').value.trim().slice(0, 60); if (!name) return;
+      try { localStorage.setItem(KEY, name); } catch {}
+      resolve(name);
+    });
+  });
+}
+function showAnonError(error) {
+  $('#nav').innerHTML = ''; $('#me').innerHTML = '';
+  $('#main').innerHTML = `<div class="empty" style="max-width:560px;margin:8vh auto 0;text-align:left;align-items:stretch"><div class="eyebrow">IACC · Vicerrectoría de Ecosistemas Digitales</div><h3 style="font-size:22px">No se pudo abrir el portafolio</h3><p>El servidor no permitió el ingreso sin correo. Avisa a la administración del portafolio: debe activar «Allow anonymous sign-ins» en Supabase.</p><p class="small muted">${esc((error && error.message) || '')}</p></div>`;
+}
 async function connectSupabase(cfg) {
   await loadScript(SUPABASE_JS);
   const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
   S.sb = sb;
   // Solo recarga si la persona estaba en la pantalla de ingreso; al cargar con sesión, SIGNED_IN también se emite y no debe recargar.
   sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && S.loginShown) { S.loginShown = false; setTimeout(() => location.reload(), 0); } });
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { showLogin(sb); return false; }
+  let { data: { session } } = await sb.auth.getSession();
+  // Ingreso sin correo: cada navegador recibe una sesión anónima. El enlace por correo queda solo para administración (?admin).
+  if (!session && new URLSearchParams(location.search).has('admin')) { showLogin(sb); return false; }
+  if (!session) {
+    const { data, error } = await sb.auth.signInAnonymously();
+    if (error || !data || !data.session) { showAnonError(error); return false; }
+    session = data.session;
+  }
   const u = session.user;
-  await sb.from('profiles').upsert({ id: u.id, email: u.email, name: (u.user_metadata && u.user_metadata.full_name) || String(u.email || '').split('@')[0] }, { onConflict: 'id', ignoreDuplicates: true });
+  S.anon = !!u.is_anonymous;
+  if (S.anon) {
+    const name = await askName(sb, u.id);
+    await sb.from('profiles').upsert({ id: u.id, name }, { onConflict: 'id' });
+  } else {
+    await sb.from('profiles').upsert({ id: u.id, email: u.email, name: (u.user_metadata && u.user_metadata.full_name) || String(u.email || '').split('@')[0] }, { onConflict: 'id', ignoreDuplicates: true });
+  }
   const { data: adm } = await sb.from('admins').select('user_id').eq('user_id', u.id).maybeSingle();
   db = supabaseDB(sb, u.id); user = supabaseUser(sb, session, !!adm); S.backend = 'supabase';
   return true;
@@ -780,7 +813,7 @@ function scheduleRender() { if (rq) return; rq = true; const go = () => { if (!r
 function renderNav() {
   $('#nav').innerHTML = VIEWS.map(v => `<button type="button" data-action="go" data-view="${v.k}" aria-current="${S.view === v.k ? 'page' : 'false'}">${ICON[v.k]}<span>${v.label}</span><kbd>${v.key}</kbd></button>`).join('');
   const me = $('#me');
-  if (S.uid && S.uid !== 'local') me.innerHTML = person('u:' + S.uid) + `<span class="small">${S.canWrite ? (S.canAdmin ? '· Editor' : '· Colaborador') : '· Lectura'}</span>` + (S.backend === 'supabase' ? `<button class="btn ghost sm" type="button" data-action="signout" style="margin-left:auto">Salir</button>` : '');
+  if (S.uid && S.uid !== 'local') me.innerHTML = person('u:' + S.uid) + `<span class="small">${S.canWrite ? (S.canAdmin ? '· Editor' : '· Colaborador') : '· Lectura'}</span>` + (S.backend === 'supabase' ? (S.anon ? `<button class="btn ghost sm" type="button" data-action="rename" style="margin-left:auto">Cambiar nombre</button>` : `<button class="btn ghost sm" type="button" data-action="signout" style="margin-left:auto">Salir</button>`) : '');
   else me.innerHTML = '<span class="small">Modo local</span>';
 }
 
@@ -1690,6 +1723,7 @@ document.addEventListener('click', e => {
     case 'board-of': S.boardInit = id; try { localStorage.setItem('pd27.board', id); } catch (er) {} closeDrawer(); go('tablero'); break;
     case 'year': S.year = +a.dataset.y; render(); break;
     case 'signout': if (S.sb) S.sb.auth.signOut().then(() => location.reload()); break;
+    case 'rename': if (S.sb && S.uid) { try { localStorage.removeItem('pd-name:' + S.uid); } catch {} location.reload(); } break;
     case 'add-dep': addDep(); break;
     case 'del-dep': delDep(id); break;
     case 'new-dec': openDecision(a.dataset.init); break;
